@@ -30,7 +30,7 @@ PlasmoidItem {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
     property int screen: plasmoid.containment.screen
-    readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring || plasmoid.containment.corona.editMode
+    readonly property bool inEditMode: plasmoid.userConfiguring || plasmoid.containment.corona.editMode
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
             return false;
@@ -38,7 +38,7 @@ PlasmoidItem {
         if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive)
             return true;
 
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || (inPlasmaPanel && !existsWindowActive)))
+        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || !existsWindowActive))
             return true;
 
         if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown)
@@ -49,12 +49,11 @@ PlasmoidItem {
     readonly property bool selectedDecorationExists: decorations.decorationExists(plasmoid.configuration.selectedPlugin, plasmoid.configuration.selectedTheme)
     readonly property bool slideAnimationEnabled: ((visibility !== AppletDecoration.Types.AlwaysVisible) && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut))
     readonly property bool isEmptySpaceEnabled: plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace
-    readonly property int containmentType: plasmoid.configuration.containmentType
-    readonly property int visibility: plasmoid.configuration.visibility
     readonly property bool perScreenActive: plasmoid.configuration.perScreenActive
+    readonly property int visibility: plasmoid.configuration.visibility
     readonly property int minimumWidth: {
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal) {
-            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode)
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring)
                 return 0;
 
         }
@@ -62,7 +61,7 @@ PlasmoidItem {
     }
     readonly property int minimumHeight: {
         if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring && !latteInEditMode)
+            if (mustHide && !isEmptySpaceEnabled && slideAnimationEnabled && !plasmoid.userConfiguring)
                 return 0;
 
         }
@@ -75,13 +74,6 @@ PlasmoidItem {
         if (auroraeThemeEngine.isEnabled && plasmoid.configuration.useDecorationMetrics)
             return plasmoid.formFactor === PlasmaCore.Types.Horizontal ? ((root.height - auroraeThemeEngine.buttonHeight) / 2) - 1 : ((root.width - auroraeThemeEngine.buttonHeight) / 2) - 1;
 
-        //! Latte padding
-        if (inLatte) {
-            if (plasmoid.formFactor === PlasmaCore.Types.Horizontal)
-                return (root.height - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
-            else
-                return (root.width - (latteBridge.iconSize * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
-        }
         //! Plasma panels code
         if (plasmoid.formFactor === PlasmaCore.Types.Horizontal)
             return (root.height - (root.height * (plasmoid.configuration.buttonSizePercentage / 100))) / 2;
@@ -112,8 +104,6 @@ PlasmoidItem {
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
     property bool hasKeepAboveButton: false
-    readonly property bool inPlasmaPanel: latteBridge === null
-    readonly property bool inLatte: latteBridge !== null
     readonly property Item lastActiveTaskItem: windowInfoLoader.item.lastActiveTaskItem
     // START decoration properties
     property string currentPlugin: plasmoid.configuration.useCurrentDecoration || !selectedDecorationExists ? decorations.currentPlugin : plasmoid.configuration.selectedPlugin
@@ -122,20 +112,8 @@ PlasmoidItem {
         if (plasmaThemeExtended.isActive)
             return plasmaThemeExtended.colors.schemeFile;
 
-        if (enforceLattePalette && plasmoid.configuration.selectedScheme === "kdeglobals")
-            return latteBridge.palette.scheme;
-
         return plasmoid.configuration.selectedScheme === "kdeglobals" ? colorsModel.defaultSchemeFile() : plasmoid.configuration.selectedScheme;
     }
-    //BEGIN Latte Dock Communicator
-    property QtObject latteBridge: null
-    //END  Latte Dock Communicator
-    //BEGIN Latte based properties
-    //!   This applet is a special case and thus the latteBridge.applyPalette is not used.
-    //!   the applet relys totally to Latte to paint itself correctly at all cases,
-    //!   even when Latte informs the applets that need to use the default plasma theme.
-    readonly property bool enforceLattePalette: latteBridge && latteBridge.palette
-    readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
     property var tasksPreparedArray: []
 
     ///functions
@@ -201,13 +179,6 @@ PlasmoidItem {
         }
         return PlasmaCore.Types.ActiveStatus;
     }
-    onLatteBridgeChanged: {
-        if (latteBridge) {
-            plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
-            latteBridge.actions.setProperty(plasmoid.id, "latteSideColoringEnabled", false);
-            latteBridge.actions.setProperty(plasmoid.id, "windowsTrackingEnabled", true);
-        }
-    }
     onButtonsStrChanged: initButtons()
     Component.onCompleted: {
         if (plasmoid.configuration.buttons.indexOf("9") === -1)
@@ -235,16 +206,7 @@ PlasmoidItem {
     Loader {
         id: windowInfoLoader
 
-        sourceComponent: latteBridge && latteBridge.windowsTracker && latteBridge.windowsTracker.currentScreen.lastActiveWindow && latteBridge.windowsTracker.allScreens.lastActiveWindow ? latteTrackerComponent : plasmaTasksModel
-
-        Component {
-            id: latteTrackerComponent
-
-            LatteWindowsTracker {
-                filterByScreen: plasmoid.configuration.filterByScreen
-            }
-
-        }
+        sourceComponent: plasmaTasksModel
 
         Component {
             id: plasmaTasksModel
@@ -492,8 +454,8 @@ PlasmoidItem {
             isKeepAbove: root.isLastActiveWindowKeepAbove
             buttonType: model.buttonType
             auroraeTheme: auroraeThemeEngine
-            monochromeIconsEnabled: latteBridge && latteBridge.applyPalette && auroraeThemeEngine.hasMonochromeIcons
-            monochromeIconsColor: latteBridge ? latteBridge.palette.textColor : "transparent"
+            monochromeIconsEnabled: auroraeThemeEngine.hasMonochromeIcons
+            monochromeIconsColor: "transparent"
             opacity: isVisible ? 1 : 0
             visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
             onClicked: {
@@ -511,22 +473,6 @@ PlasmoidItem {
 
         interval: 200
         onTriggered: initializeControlButtonsModel()
-    }
-
-    //! this timer is used in order to identify in which containment the applet is in
-    //! it should be called only the first time an applet is created and loaded because
-    //! afterwards the applet has no way to move between different processes such
-    //! as Plasma and Latte
-    Timer {
-        id: containmentIdentifierTimer
-
-        interval: 5000
-        onTriggered: {
-            if (latteBridge)
-                plasmoid.configuration.containmentType = AppletDecoration.Types.Latte;
-            else
-                plasmoid.configuration.containmentType = AppletDecoration.Types.Plasma;
-        }
     }
 
     //START Behaviors

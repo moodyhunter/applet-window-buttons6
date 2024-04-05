@@ -49,8 +49,6 @@ Item {
     property alias cfg_lengthMarginsLock: lockItem.locked
     property var cfg_buttonSizePercentageDefault
     property var cfg_buttonsDefault
-    property var cfg_containmentType
-    property var cfg_containmentTypeDefault
     property var cfg_filterByScreenDefault
     property var cfg_perScreenActiveDefault
     property var cfg_formFactor
@@ -261,7 +259,7 @@ Item {
                 RadioButton {
                     id: activeMaximizedBtn
 
-                    text: plasmoid.configuration.containmentType === AppletDecoration.Types.Latte ? i18n("Last active window is maximized") : i18n("Active window is maximized")
+                    text: i18n("Active window is maximized")
                     checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
                     onCheckedChanged: {
                         if (checked)
