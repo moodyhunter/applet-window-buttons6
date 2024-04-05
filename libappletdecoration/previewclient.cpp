@@ -364,7 +364,6 @@ void PreviewClient::setBordersTopEdge(bool enabled)
     emit bordersTopEdgeChanged(enabled);
 }
 
-#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 13
 void PreviewClient::requestShowToolTip(const QString &text)
 {
     Q_UNUSED(text)
@@ -375,26 +374,17 @@ void PreviewClient::requestHideToolTip()
 {
     // qDebug() << "tooltip hide requested";
 }
-#endif
 
-#if KDECORATION2_VERSION_MAJOR > 5 || KDECORATION2_VERSION_MINOR >= 18
 QSize PreviewClient::size() const
 {
     return { m_width, m_height };
 }
-#endif
 
-#if KDECORATION2_VERSION_MAJOR <= 5 && KDECORATION2_VERSION_MINOR <= 20
-void PreviewClient::requestShowWindowMenu()
-{
-    emit showWindowMenuRequested();
-}
-#else
 void PreviewClient::requestShowWindowMenu(const QRect &rect)
 {
+    Q_UNUSED(rect)
     emit showWindowMenuRequested();
 }
-#endif
 
 void PreviewClient::requestClose()
 {

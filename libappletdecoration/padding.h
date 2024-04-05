@@ -57,10 +57,10 @@ class Padding : public QObject
     void rightChanged();
 
   private:
-    int m_top{ 0 };
-    int m_left{ 0 };
-    int m_bottom{ 0 };
-    int m_right{ 0 };
+    int m_top = 0;
+    int m_left = 0;
+    int m_bottom = 0;
+    int m_right = 0;
 };
 
 #endif

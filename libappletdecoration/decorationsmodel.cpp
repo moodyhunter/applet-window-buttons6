@@ -122,13 +122,9 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
     switch (role)
     {
         case Qt::DisplayRole: return d.visibleName;
-
         case Qt::UserRole + 4: return d.pluginName;
-
         case Qt::UserRole + 5: return d.themeName;
-
         case Qt::UserRole + 6: return d.isAuroraeTheme;
-
         case Qt::UserRole + 7: return d.configuration;
     }
 
