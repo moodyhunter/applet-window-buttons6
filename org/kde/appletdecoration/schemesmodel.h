@@ -22,12 +22,14 @@
 #define SCHEMESMODEL_H
 
 #include <QAbstractListModel>
+#include <qqml.h>
 
 class SchemeColors;
 
 class SchemesModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
   public:
     explicit SchemesModel(QObject *parent = nullptr);

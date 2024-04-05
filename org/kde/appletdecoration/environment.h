@@ -27,6 +27,9 @@
 class Environment final : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
     Q_PROPERTY(uint frameworksVersion READ frameworksVersion NOTIFY frameworksVersionChanged)
     Q_PROPERTY(uint plasmaDesktopVersion READ plasmaDesktopVersion NOTIFY plasmaDesktopVersionChanged)
 

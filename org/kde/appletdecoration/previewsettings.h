@@ -29,6 +29,8 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QPointer>
+#include <qqml.h>
+#include <qqmlintegration.h>
 
 class ButtonsModel;
 class PreviewBridge;
@@ -127,6 +129,8 @@ class PreviewSettings
 class Settings : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration2::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)

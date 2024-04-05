@@ -25,10 +25,13 @@
 #define DECORATIONSMODEL_H
 
 #include <QAbstractListModel>
+#include <qqml.h>
 
 class DecorationsModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(QString currentPlugin READ currentPlugin NOTIFY currentPluginChanged)
     Q_PROPERTY(QString currentTheme READ currentTheme NOTIFY currentThemeChanged)

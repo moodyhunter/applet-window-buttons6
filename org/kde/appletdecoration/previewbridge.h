@@ -28,6 +28,7 @@
 #include <KDecoration2/Private/DecorationBridge>
 #include <QList>
 #include <QPointer>
+#include <qqml.h>
 
 class KPluginFactory;
 
@@ -38,6 +39,9 @@ class PreviewSettings;
 class PreviewBridge : public KDecoration2::DecorationBridge
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_ANONYMOUS
+
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
@@ -95,6 +99,8 @@ class PreviewBridge : public KDecoration2::DecorationBridge
 class BridgeItem : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)

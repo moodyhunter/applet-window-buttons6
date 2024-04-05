@@ -29,6 +29,7 @@
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
+#include <QtQmlIntegration>
 #include <config-decoration.h>
 #include <kdecoration2/decoration.h>
 
@@ -39,6 +40,9 @@ class PreviewClient
     , public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_ANONYMOUS
+
     Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon NOTIFY iconChanged)

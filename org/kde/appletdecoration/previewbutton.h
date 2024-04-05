@@ -38,6 +38,8 @@ class PreviewClient;
 class PreviewButtonItem : public QQuickPaintedItem
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(SharedDecoration *sharedDecoration READ sharedDecoration WRITE setSharedDecoration NOTIFY sharedDecorationChanged)
 

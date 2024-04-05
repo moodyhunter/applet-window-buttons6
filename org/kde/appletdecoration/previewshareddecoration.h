@@ -35,6 +35,8 @@ class Settings;
 class SharedDecoration : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
 

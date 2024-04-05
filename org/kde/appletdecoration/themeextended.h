@@ -30,10 +30,13 @@
 #include <QObject>
 #include <QTemporaryDir>
 #include <array>
+#include <qqml.h>
 
 class ExtendedTheme : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(QObject *colors READ colors NOTIFY colorsChanged)
 
   public:

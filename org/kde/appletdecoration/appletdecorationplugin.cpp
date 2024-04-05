@@ -36,24 +36,24 @@
 #include <QQmlEngine>
 #include <QtQml>
 
-void AppletDecorationPlugin::registerTypes(const char *uri)
-{
-    Q_ASSERT(uri == QLatin1String("org.kde.appletdecoration"));
-    qmlRegisterUncreatableType<Types>(uri, 0, 1, "Types", "Applet decoration types");
+// void AppletDecorationPlugin::registerTypes(const char *uri)
+// {
+//     Q_ASSERT(uri == QLatin1String("org.kde.appletdecoration"));
+//     qmlRegisterUncreatableType<Types>(uri, 0, 1, "Types", "Applet decoration types");
 
-    qmlRegisterType<AuroraeTheme>(uri, 0, 1, "AuroraeTheme");
-    qmlRegisterType<BridgeItem>(uri, 0, 1, "Bridge");
-    qmlRegisterType<Settings>(uri, 0, 1, "Settings");
-    qmlRegisterType<PreviewButtonItem>(uri, 0, 1, "Button");
-    qmlRegisterType<DecorationsModel>(uri, 0, 1, "DecorationsModel");
-    qmlRegisterType<SchemesModel>(uri, 0, 1, "ColorsModel");
-    qmlRegisterType<SharedDecoration>(uri, 0, 1, "SharedDecoration");
-    qmlRegisterType<ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
+//     qmlRegisterType<AuroraeTheme>(uri, 0, 1, "AuroraeTheme");
+//     qmlRegisterType<BridgeItem>(uri, 0, 1, "Bridge");
+//     qmlRegisterType<Settings>(uri, 0, 1, "Settings");
+//     qmlRegisterType<PreviewButtonItem>(uri, 0, 1, "Button");
+//     qmlRegisterType<DecorationsModel>(uri, 0, 1, "DecorationsModel");
+//     qmlRegisterType<SchemesModel>(uri, 0, 1, "ColorsModel");
+//     qmlRegisterType<SharedDecoration>(uri, 0, 1, "SharedDecoration");
+//     qmlRegisterType<ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
 
-    qmlRegisterAnonymousType<Padding>("", 1);
-    qmlRegisterAnonymousType<PreviewClient>("", 1);
-    qmlRegisterAnonymousType<PreviewBridge>("", 1);
-    qmlRegisterAnonymousType<KDecoration2::Decoration>("", 1);
+//     qmlRegisterAnonymousType<Padding>("", 1);
+//     qmlRegisterAnonymousType<PreviewClient>("", 1);
+//     qmlRegisterAnonymousType<PreviewBridge>("", 1);
+//     qmlRegisterAnonymousType<KDecoration2::Decoration>("", 1);
 
-    qmlRegisterSingletonType<Environment>(uri, 0, 1, "Environment", &Environment::instance);
-}
+//     qmlRegisterSingletonType<Environment>(uri, 0, 1, "Environment", &Environment::instance);
+// }

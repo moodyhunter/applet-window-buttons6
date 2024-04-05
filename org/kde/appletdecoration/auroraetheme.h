@@ -24,10 +24,13 @@
 
 #include <QColor>
 #include <QObject>
+#include <qqml.h>
 
 class AuroraeTheme : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QString themeName READ themeName NOTIFY themeChanged)
     Q_PROPERTY(QString themePath READ themePath NOTIFY themeChanged)
