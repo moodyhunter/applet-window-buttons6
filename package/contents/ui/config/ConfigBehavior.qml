@@ -1,3 +1,8 @@
+/*
+ *  SPDX-FileCopyrightText: 2024 Christian Tallner <chrtall@gmx.de>
+ *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+*/
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2

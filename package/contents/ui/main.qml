@@ -27,10 +27,6 @@ import org.kde.plasma.plasmoid
 PlasmoidItem {
     id: root
 
-    // plasmoid.userConfiguringChanged: {
-    //     console.log("Config Changed")
-    // }
-
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
     property int screen: plasmoid.containment.screen

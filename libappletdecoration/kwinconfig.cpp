@@ -1,6 +1,8 @@
-//
-// Created by christian on 6/13/24.
-//
+/*
+ *  SPDX-FileCopyrightText: 2024 Christian Tallner <chrtall@gmx.de>
+ *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwinconfig.h"
 #include <QDBusConnection>
 
