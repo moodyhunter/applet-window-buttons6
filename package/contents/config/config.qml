@@ -27,4 +27,9 @@ ConfigModel {
         source: "config/ConfigGeneral.qml"
     }
 
+    ConfigCategory {
+        name: i18n("Behavior")
+        icon: "preferences-desktop"
+        source: "config/ConfigBehavior.qml"
+    }
 }

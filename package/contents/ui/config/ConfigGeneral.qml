@@ -18,17 +18,16 @@
 */
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
-import org.kde.appletdecoration as AppletDecoration
+import QtQuick.Controls as QQC2
+import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
 import org.kde.kitemmodels
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.core as PlasmaCore
+import org.kde.appletdecoration as AppletDecoration
 
-Item {
-    ///END Decoration Items
-
+KCM.SimpleKCM {
     id: root
 
     property alias cfg_useCurrentDecoration: root.useCurrent
@@ -36,42 +35,16 @@ Item {
     property alias cfg_selectedScheme: root.selectedScheme
     property alias cfg_selectedTheme: root.selectedTheme
     property alias cfg_buttons: root.currentButtons
+
     property alias cfg_buttonSizePercentage: buttonSizeSpn.value
-    property alias cfg_visibility: root.visibility
-    property alias cfg_filterByScreen: byScreenChk.checked
-    property alias cfg_perScreenActive: stickyChk.checked
-    property alias cfg_hiddenState: root.hiddenState
-    property alias cfg_inactiveStateEnabled: inactiveChk.checked
     property alias cfg_useDecorationMetrics: decorationMetricsChk.checked
     property alias cfg_spacing: spacingSpn.value
     property alias cfg_lengthFirstMargin: lengthFirstSpn.value
     property alias cfg_lengthLastMargin: lengthLastSpn.value
     property alias cfg_lengthMarginsLock: lockItem.locked
-    property var cfg_buttonSizePercentageDefault
-    property var cfg_buttonsDefault
-    property var cfg_containmentType
-    property var cfg_containmentTypeDefault
-    property var cfg_filterByScreenDefault
-    property var cfg_perScreenActiveDefault
-    property var cfg_formFactor
-    property var cfg_formFactorDefault
-    property var cfg_hiddenStateDefault
-    property var cfg_inactiveStateEnabledDefault
-    property var cfg_lengthFirstMarginDefault
-    property var cfg_lengthLastMarginDefault
-    property var cfg_lengthMarginsLockDefault
-    property var cfg_selectedPluginDefault
-    property var cfg_selectedSchemeDefault
-    property var cfg_selectedThemeDefault
-    property var cfg_spacingDefault
-    property var cfg_useCurrentDecorationDefault
-    property var cfg_useDecorationMetricsDefault
-    property var cfg_visibilityDefault
-    property var title
+    //property var title
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
-    property int hiddenState
-    property int visibility
     property string selectedPlugin
     property string selectedScheme
     property string selectedTheme
@@ -82,6 +55,10 @@ Item {
     readonly property int minimumWidth: 220
     property string currentPlugin: root.useCurrent || !selectedDecorationExists ? decorations.currentPlugin : root.selectedPlugin
     property string currentTheme: root.useCurrent || !selectedDecorationExists ? decorations.currentTheme : root.selectedTheme
+
+    onSelectedPluginChanged: {
+        console.log("Selected Plugin CHanged: ", root.selectedPlugin)
+    }
 
     ///START Decoration Items
     AppletDecoration.Bridge {
@@ -142,12 +119,11 @@ Item {
 
     ColumnLayout {
         id: mainColumn
-
         spacing: Kirigami.Units.largeSpacing
         Layout.fillWidth: true
 
         RowLayout {
-            Label {
+            QQC2.Label {
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Decoration:")
                 horizontalAlignment: Text.AlignRight
@@ -166,7 +142,7 @@ Item {
         RowLayout {
             visible: !auroraeThemeEngine.isEnabled
 
-            Label {
+            QQC2.Label {
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Colors:")
                 horizontalAlignment: Text.AlignRight
@@ -188,9 +164,11 @@ Item {
         }
 
         GridLayout {
+            rowSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: Kirigami.Units.largeSpacing
             columns: 2
 
-            Label {
+            QQC2.Label {
                 Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                 text: i18n("Buttons:")
                 horizontalAlignment: Text.AlignRight
@@ -214,178 +192,6 @@ Item {
 
         }
 
-        GridLayout {
-            columns: 2
-            rows: 4
-            flow: GridLayout.TopToBottom
-
-            Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                Layout.rowSpan: 4
-                Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: i18n("Show:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            ButtonGroup {
-                buttons: column.children
-            }
-
-            Column {
-                id: column
-
-                RadioButton {
-                    id: alwaysVisibleBtn
-
-                    text: i18n("Always visible")
-                    checked: root.visibility === AppletDecoration.Types.AlwaysVisible
-                    onCheckedChanged: {
-                        if (checked)
-                            root.visibility = AppletDecoration.Types.AlwaysVisible;
-
-                    }
-                }
-
-                RadioButton {
-                    id: activeWindowBtn
-
-                    text: i18n("Active window is present")
-                    checked: root.visibility === AppletDecoration.Types.ActiveWindow
-                    onCheckedChanged: {
-                        if (checked)
-                            root.visibility = AppletDecoration.Types.ActiveWindow;
-
-                    }
-                }
-
-                RadioButton {
-                    id: activeMaximizedBtn
-
-                    text: plasmoid.configuration.containmentType === AppletDecoration.Types.Latte ? i18n("Last active window is maximized") : i18n("Active window is maximized")
-                    checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
-                    onCheckedChanged: {
-                        if (checked)
-                            root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
-
-                    }
-                }
-
-                RadioButton {
-                    id: shownWindowBtn
-
-                    text: i18n("At least one window is shown")
-                    checked: root.visibility === AppletDecoration.Types.ShownWindowExists
-                    onCheckedChanged: {
-                        if (checked)
-                            root.visibility = AppletDecoration.Types.ShownWindowExists;
-
-                    }
-                }
-
-            }
-
-        }
-
-        GridLayout {
-            columns: 2
-            rows: 2
-            flow: GridLayout.TopToBottom
-            enabled: root.visibility !== AppletDecoration.Types.AlwaysVisible
-
-            Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                Layout.rowSpan: 2
-                Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: i18n("Hidden State:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            ButtonGroup {
-                buttons: column2.children
-            }
-
-            Column {
-                id: column2
-
-                RadioButton {
-                    id: slideOutBtn
-
-                    text: i18n("Slide out animation")
-                    checked: root.hiddenState === AppletDecoration.Types.SlideOut
-                    onCheckedChanged: {
-                        if (checked)
-                            root.hiddenState = AppletDecoration.Types.SlideOut;
-
-                    }
-                }
-
-                RadioButton {
-                    id: emptySpaceBtn
-
-                    text: i18n("Preserve as empty space")
-                    checked: root.hiddenState === AppletDecoration.Types.EmptySpace
-                    onCheckedChanged: {
-                        if (checked)
-                            root.hiddenState = AppletDecoration.Types.EmptySpace;
-
-                    }
-                }
-
-            }
-
-        }
-
-        GridLayout {
-            Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Filters:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            CheckBox {
-                id: byScreenChk
-
-                text: i18n("Show only for windows in current screen")
-            }
-
-        }
-
-        GridLayout {
-            Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Per-screen active window:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            CheckBox {
-                id: stickyChk
-
-                text: i18n("Enabled")
-            }
-
-        }
-
-        GridLayout {
-            columns: 2
-            rows: 2
-            flow: GridLayout.TopToBottom
-
-            Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                Layout.rowSpan: 2
-                text: i18n("Appearance:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            CheckBox {
-                id: inactiveChk
-
-                text: i18n("Draw buttons inactive state when needed")
-            }
-
-        }
-
         ColumnLayout {
             id: visualSettings
 
@@ -394,28 +200,28 @@ Item {
 
                 columns: 2
 
-                Label {
+                QQC2.Label {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Metrics:")
                     horizontalAlignment: Text.AlignRight
                     visible: auroraeThemeEngine.isEnabled
                 }
 
-                CheckBox {
+                QQC2.CheckBox {
                     id: decorationMetricsChk
 
                     text: i18n("Use from decoration if any are found")
                     visible: auroraeThemeEngine.isEnabled
                 }
 
-                Label {
+                QQC2.Label {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Size:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                SpinBox {
+                QQC2.SpinBox {
                     id: buttonSizeSpn
 
                     from: 40
@@ -424,14 +230,14 @@ Item {
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                Label {
+                QQC2.Label {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: i18n("Spacing:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
                 }
 
-                SpinBox {
+                QQC2.SpinBox {
                     id: spacingSpn
 
                     from: 0
@@ -453,7 +259,7 @@ Item {
                 columnSpacing: visualSettingsGroup1.columnSpacing
                 rowSpacing: visualSettingsGroup1.rowSpacing
 
-                Label {
+                QQC2.Label {
                     id: firstLengthLbl
 
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
@@ -461,14 +267,14 @@ Item {
                     horizontalAlignment: Text.AlignRight
                 }
 
-                Label {
+                QQC2.Label {
                     Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
                     text: plasmoid.configuration.formFactor === PlasmaCore.Types.Horizontal ? i18n("Right margin:") : i18n("Bottom margin:")
                     horizontalAlignment: Text.AlignRight
                     enabled: !lockItem.locked
                 }
 
-                SpinBox {
+                QQC2.SpinBox {
                     // suffix: " " + i18nc("pixels","px.")
 
                     id: lengthFirstSpn
@@ -489,7 +295,7 @@ Item {
                     }
                 }
 
-                SpinBox {
+                QQC2.SpinBox {
                     id: lengthLastSpn
 
                     from: 0

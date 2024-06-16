@@ -22,6 +22,7 @@
 #include "auroraetheme.h"
 #include "decorationsmodel.h"
 #include "environment.h"
+#include "kwinconfig.h"
 #include "padding.h"
 #include "previewbridge.h"
 #include "previewbutton.h"
@@ -49,6 +50,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<SchemesModel>(uri, 0, 1, "ColorsModel");
     qmlRegisterType<SharedDecoration>(uri, 0, 1, "SharedDecoration");
     qmlRegisterType<ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
+    qmlRegisterType<KWinConfig>(uri, 0, 1, "KWinConfig");
 
     qmlRegisterAnonymousType<Padding>("", 1);
     qmlRegisterAnonymousType<PreviewClient>("", 1);
