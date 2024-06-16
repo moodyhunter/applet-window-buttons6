@@ -85,14 +85,6 @@ class Types
         EmptySpace
     };
     Q_ENUM(HiddenState)
-
-    enum ContainmentType
-    {
-        Loading = 0,
-        Plasma,
-        Latte
-    };
-    Q_ENUM(ContainmentType)
 };
 
 #endif
