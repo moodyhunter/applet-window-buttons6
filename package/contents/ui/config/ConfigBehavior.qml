@@ -28,13 +28,19 @@ KCM.SimpleKCM {
     property bool borderlessMaximizedWindows: kwinConfig.borderlessMaximizedWindows
     property bool initialBorderlessMaximizedWindowsValue: kwinConfig.borderlessMaximizedWindows
 
+    Component.onCompleted: {
+        if(kwinConfig.borderlessMaximizedWindows !== plasmoid.configuration.borderlessMaximizedWindows){
+            root.borderlessMaximizedWindows = kwinConfig.borderlessMaximizedWindows
+            plasmoid.configuration.borderlessMaximizedWindows = kwinConfig.borderlessMaximizedWindows
+        }
+    }
+
     // Signal is fired when the user clicks on the save or apply button in the config page.
     Plasmoid.configuration.onValueChanged: {
         // Only safe KWin Config if value changed.
         // Saving to KWin requires reloading KWin config, which is expensive and should be avoided.
         if (root.borderlessMaximizedWindows !== root.initialBorderlessMaximizedWindowsValue) {
-            console.log("Saving KWin Config")
-            root.initialBorderlessMaximizedWindowsValue = borderlessMaximizedWindows
+            root.initialBorderlessMaximizedWindowsValue = root.borderlessMaximizedWindows
             kwinConfig.borderlessMaximizedWindows = borderlessMaximizedWindows
         }
     }

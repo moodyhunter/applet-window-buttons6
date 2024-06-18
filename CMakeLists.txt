@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(applet_windowbuttons)
 

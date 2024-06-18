@@ -1,6 +1,8 @@
 /*
  *  SPDX-FileCopyrightText: 2024 Christian Tallner <chrtall@gmx.de>
  *
+ *  This file is part of Window Buttons Applet
+ *
  *  SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include <KConfig>
