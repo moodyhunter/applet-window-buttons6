@@ -1,20 +1,9 @@
 /*
- *  Copyright 2018  Michail Vourlakos <mvourlakos@gmail.com>
+ *  SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
  *
  *  This file is part of the libappletdecoration library
  *
- *  Latte-Dock is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation; either version 2 of
- *  the License, or (at your option) any later version.
- *
- *  Latte-Dock is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 #include "appletdecorationplugin.h"
@@ -22,6 +11,7 @@
 #include "auroraetheme.h"
 #include "decorationsmodel.h"
 #include "environment.h"
+#include "kwinconfig.h"
 #include "padding.h"
 #include "previewbridge.h"
 #include "previewbutton.h"
@@ -49,6 +39,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<SchemesModel>(uri, 0, 1, "ColorsModel");
     qmlRegisterType<SharedDecoration>(uri, 0, 1, "SharedDecoration");
     qmlRegisterType<ExtendedTheme>(uri, 0, 1, "PlasmaThemeExtended");
+    qmlRegisterType<KWinConfig>(uri, 0, 1, "KWinConfig");
 
     qmlRegisterAnonymousType<Padding>("", 1);
     qmlRegisterAnonymousType<PreviewClient>("", 1);
