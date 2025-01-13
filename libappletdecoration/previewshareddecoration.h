@@ -48,7 +48,7 @@ class SharedDecoration : public QObject
     Settings *settings() const;
     void setSettings(Settings *settings);
 
-    KDecoration2::Decoration *decoration() const;
+    KDecoration3::Decoration *decoration() const;
 
     void initDecoration();
 
@@ -65,7 +65,7 @@ class SharedDecoration : public QObject
 
   private:
     QPointer<PreviewBridge> m_bridge;
-    QPointer<KDecoration2::Decoration> m_decoration;
+    QPointer<KDecoration3::Decoration> m_decoration;
     QPointer<Settings> m_settings;
 
     QString m_lastPlugin;

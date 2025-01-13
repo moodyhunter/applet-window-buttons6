@@ -29,8 +29,8 @@
 #include "previewsettings.h"
 #include "previewshareddecoration.h"
 
-#include <KDecoration2/DecoratedClient>
-#include <KDecoration2/Decoration>
+#include <KDecoration3/DecoratedWindow>
+#include <KDecoration3/Decoration>
 #include <QDebug>
 #include <QEvent>
 #include <QPainter>
@@ -111,7 +111,7 @@ void PreviewButtonItem::setIsMaximized(bool maximized)
 
     m_isMaximized = maximized;
 
-    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::Maximize)
+    if (m_client && m_button && m_type == KDecoration3::DecorationButtonType::Maximize)
     {
 
         if (m_isMaximized)
@@ -143,7 +143,7 @@ void PreviewButtonItem::setIsOnAllDesktops(bool onalldesktops)
 
     m_isOnAllDesktops = onalldesktops;
 
-    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::OnAllDesktops)
+    if (m_client && m_button && m_type == KDecoration3::DecorationButtonType::OnAllDesktops)
     {
         if (m_isOnAllDesktops)
         {
@@ -172,7 +172,7 @@ void PreviewButtonItem::setIsKeepAbove(bool keepabove)
 
     m_isKeepAbove = keepabove;
 
-    if (m_client && m_button && m_type == KDecoration2::DecorationButtonType::KeepAbove)
+    if (m_client && m_button && m_type == KDecoration3::DecorationButtonType::KeepAbove)
     {
         if (m_isKeepAbove)
         {
@@ -187,7 +187,7 @@ void PreviewButtonItem::setIsKeepAbove(bool keepabove)
     emit isKeepAboveChanged();
 }
 
-KDecoration2::DecorationButtonType PreviewButtonItem::type() const
+KDecoration3::DecorationButtonType PreviewButtonItem::type() const
 {
     return m_type;
 }
@@ -199,10 +199,10 @@ Padding *PreviewButtonItem::padding() const
 
 void PreviewButtonItem::setType(int type)
 {
-    setType(KDecoration2::DecorationButtonType(type));
+    setType(KDecoration3::DecorationButtonType(type));
 }
 
-void PreviewButtonItem::setType(KDecoration2::DecorationButtonType type)
+void PreviewButtonItem::setType(KDecoration3::DecorationButtonType type)
 {
     if (m_type == type)
     {
@@ -302,7 +302,7 @@ void PreviewButtonItem::setLocalY(int y)
     emit localYChanged();
 }
 
-KDecoration2::Decoration *PreviewButtonItem::decoration() const
+KDecoration3::Decoration *PreviewButtonItem::decoration() const
 {
     if (!m_sharedDecoration)
     {
@@ -339,7 +339,7 @@ void PreviewButtonItem::componentComplete()
 
 void PreviewButtonItem::createButton()
 {
-    if (m_type == KDecoration2::DecorationButtonType::Custom || !m_sharedDecoration || !m_sharedDecoration->decoration() || !m_bridge)
+    if (m_type == KDecoration3::DecorationButtonType::Custom || !m_sharedDecoration || !m_sharedDecoration->decoration() || !m_bridge)
     {
         return;
     }
@@ -391,16 +391,16 @@ void PreviewButtonItem::createButton()
 
     if (!m_lastAppliedDecoration.isNull())
     {
-        disconnect(m_lastAppliedDecoration.data(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
+        disconnect(m_lastAppliedDecoration.data(), &KDecoration3::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
     }
 
-    connect(m_sharedDecoration->decoration(), &KDecoration2::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
+    connect(m_sharedDecoration->decoration(), &KDecoration3::Decoration::damaged, this, &PreviewButtonItem::onDecorationDamaged);
     m_lastAppliedDecoration = m_sharedDecoration->decoration();
 
     m_button->setEnabled(true);
     m_button->setVisible(true);
 
-    connect(m_button, &KDecoration2::DecorationButton::geometryChanged, this, &PreviewButtonItem::onButtonDamaged);
+    connect(m_button, &KDecoration3::DecorationButton::geometryChanged, this, &PreviewButtonItem::onButtonDamaged);
 
     syncInternalGeometry();
 }

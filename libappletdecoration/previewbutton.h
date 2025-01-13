@@ -26,7 +26,7 @@
 
 #include "previewshareddecoration.h"
 
-#include <KDecoration2/DecorationButton>
+#include <KDecoration3/DecorationButton>
 #include <QMargins>
 #include <QPointer>
 #include <QQuickPaintedItem>
@@ -65,7 +65,7 @@ class PreviewButtonItem : public QQuickPaintedItem
     SharedDecoration *sharedDecoration() const;
     void setSharedDecoration(SharedDecoration *sharedDecoration);
 
-    KDecoration2::Decoration *decoration() const;
+    KDecoration3::Decoration *decoration() const;
 
     bool isActive() const;
     void setIsActive(bool active);
@@ -85,9 +85,9 @@ class PreviewButtonItem : public QQuickPaintedItem
     int localY() const;
     void setLocalY(int y);
 
-    KDecoration2::DecorationButtonType type() const;
+    KDecoration3::DecorationButtonType type() const;
     int typeAsInt() const;
-    void setType(KDecoration2::DecorationButtonType type);
+    void setType(KDecoration3::DecorationButtonType type);
     void setType(int type);
 
     QString scheme() const;
@@ -135,10 +135,10 @@ class PreviewButtonItem : public QQuickPaintedItem
     QPointer<PreviewBridge> m_bridge;
     QPointer<PreviewClient> m_client;
     QPointer<SharedDecoration> m_sharedDecoration;
-    QPointer<KDecoration2::Decoration> m_lastAppliedDecoration;
+    QPointer<KDecoration3::Decoration> m_lastAppliedDecoration;
 
-    KDecoration2::DecorationButton *m_button = nullptr;
-    KDecoration2::DecorationButtonType m_type = KDecoration2::DecorationButtonType::Custom;
+    KDecoration3::DecorationButton *m_button = nullptr;
+    KDecoration3::DecorationButtonType m_type = KDecoration3::DecorationButtonType::Custom;
 
     bool m_isActive{ true };
     bool m_isMaximized{ false };

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DECORATION_PALETTE_H
 #define KWIN_DECORATION_PALETTE_H
 
-#include <KDecoration2/DecorationSettings>
+#include <KDecoration3/DecorationSettings>
 #include <QFileSystemWatcher>
 #include <QPalette>
 
@@ -35,7 +35,7 @@ class DecorationPalette : public QObject
 
     bool isValid() const;
 
-    QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const;
+    QColor color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const;
     QPalette palette() const;
 
   Q_SIGNALS:
