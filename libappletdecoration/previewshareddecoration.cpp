@@ -26,7 +26,7 @@
 #include "previewbutton.h"
 #include "previewsettings.h"
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 
 SharedDecoration::SharedDecoration(QObject *parent) : QObject(parent)
 {
@@ -62,7 +62,7 @@ void SharedDecoration::setBridge(PreviewBridge *bridge)
     emit bridgeChanged();
 }
 
-KDecoration2::Decoration *SharedDecoration::decoration() const
+KDecoration3::Decoration *SharedDecoration::decoration() const
 {
     return m_decoration;
 }
@@ -119,7 +119,9 @@ void SharedDecoration::createDecoration()
     if (m_decoration)
     {
         m_decoration->setSettings(m_settings->settings());
+        m_decoration->create();
         m_decoration->init();
+        m_decoration->apply(m_decoration->nextState()->clone());
         m_decoration->setObjectName("applet-window-buttons");
     }
 

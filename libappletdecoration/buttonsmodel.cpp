@@ -26,22 +26,22 @@
 #include <KLocalizedString>
 #include <QFontDatabase>
 
-ButtonsModel::ButtonsModel(const QVector<KDecoration2::DecorationButtonType> &buttons, QObject *parent) : QAbstractListModel(parent), m_buttons(buttons)
+ButtonsModel::ButtonsModel(const QVector<KDecoration3::DecorationButtonType> &buttons, QObject *parent) : QAbstractListModel(parent), m_buttons(buttons)
 {
 }
 
 ButtonsModel::ButtonsModel(QObject *parent)
-    : ButtonsModel(QVector<KDecoration2::DecorationButtonType>({
-                       KDecoration2::DecorationButtonType::Menu,
-                       KDecoration2::DecorationButtonType::ApplicationMenu,
-                       KDecoration2::DecorationButtonType::OnAllDesktops,
-                       KDecoration2::DecorationButtonType::Minimize,
-                       KDecoration2::DecorationButtonType::Maximize,
-                       KDecoration2::DecorationButtonType::Close,
-                       KDecoration2::DecorationButtonType::ContextHelp,
-                       KDecoration2::DecorationButtonType::Shade,
-                       KDecoration2::DecorationButtonType::KeepBelow,
-                       KDecoration2::DecorationButtonType::KeepAbove,
+    : ButtonsModel(QVector<KDecoration3::DecorationButtonType>({
+                       KDecoration3::DecorationButtonType::Menu,
+                       KDecoration3::DecorationButtonType::ApplicationMenu,
+                       KDecoration3::DecorationButtonType::OnAllDesktops,
+                       KDecoration3::DecorationButtonType::Minimize,
+                       KDecoration3::DecorationButtonType::Maximize,
+                       KDecoration3::DecorationButtonType::Close,
+                       KDecoration3::DecorationButtonType::ContextHelp,
+                       KDecoration3::DecorationButtonType::Shade,
+                       KDecoration3::DecorationButtonType::KeepBelow,
+                       KDecoration3::DecorationButtonType::KeepAbove,
                    }),
                    parent)
 {
@@ -59,20 +59,20 @@ int ButtonsModel::rowCount(const QModelIndex &parent) const
     return m_buttons.count();
 }
 
-static QString buttonToName(KDecoration2::DecorationButtonType type)
+static QString buttonToName(KDecoration3::DecorationButtonType type)
 {
     switch (type)
     {
-        case KDecoration2::DecorationButtonType::Menu: return i18n("Menu");
-        case KDecoration2::DecorationButtonType::ApplicationMenu: return i18n("Application menu");
-        case KDecoration2::DecorationButtonType::OnAllDesktops: return i18n("On all desktops");
-        case KDecoration2::DecorationButtonType::Minimize: return i18n("Minimize");
-        case KDecoration2::DecorationButtonType::Maximize: return i18n("Maximize");
-        case KDecoration2::DecorationButtonType::Close: return i18n("Close");
-        case KDecoration2::DecorationButtonType::ContextHelp: return i18n("Context help");
-        case KDecoration2::DecorationButtonType::Shade: return i18n("Shade");
-        case KDecoration2::DecorationButtonType::KeepBelow: return i18n("Keep below");
-        case KDecoration2::DecorationButtonType::KeepAbove: return i18n("Keep above");
+        case KDecoration3::DecorationButtonType::Menu: return i18n("Menu");
+        case KDecoration3::DecorationButtonType::ApplicationMenu: return i18n("Application menu");
+        case KDecoration3::DecorationButtonType::OnAllDesktops: return i18n("On all desktops");
+        case KDecoration3::DecorationButtonType::Minimize: return i18n("Minimize");
+        case KDecoration3::DecorationButtonType::Maximize: return i18n("Maximize");
+        case KDecoration3::DecorationButtonType::Close: return i18n("Close");
+        case KDecoration3::DecorationButtonType::ContextHelp: return i18n("Context help");
+        case KDecoration3::DecorationButtonType::Shade: return i18n("Shade");
+        case KDecoration3::DecorationButtonType::KeepBelow: return i18n("Keep below");
+        case KDecoration3::DecorationButtonType::KeepAbove: return i18n("Keep above");
         default: return QString();
     }
 }
@@ -131,7 +131,7 @@ void ButtonsModel::up(int index)
     endMoveRows();
 }
 
-void ButtonsModel::add(KDecoration2::DecorationButtonType type)
+void ButtonsModel::add(KDecoration3::DecorationButtonType type)
 {
     beginInsertRows(QModelIndex(), m_buttons.count(), m_buttons.count());
     m_buttons.append(type);
@@ -141,7 +141,7 @@ void ButtonsModel::add(KDecoration2::DecorationButtonType type)
 void ButtonsModel::add(int index, int type)
 {
     beginInsertRows(QModelIndex(), index + 1, index + 1);
-    m_buttons.insert(index + 1, KDecoration2::DecorationButtonType(type));
+    m_buttons.insert(index + 1, KDecoration3::DecorationButtonType(type));
     endInsertRows();
 }
 

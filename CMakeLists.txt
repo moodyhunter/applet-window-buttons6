@@ -8,7 +8,7 @@ set(EMAIL "mvourlakos@gmail.com")
 
 set(QT_MIN_VERSION "6.6.0")
 set(KF6_MIN_VERSION "5.246.0")
-set(KDECORATION2_MIN_VERSION "5.90")
+set(KDecoration3_MIN_VERSION "6.2.90")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
@@ -16,18 +16,18 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS Gui Qml Quick)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons Declarative Package Svg)
 find_package(Plasma "5.90" REQUIRED)
-find_package(KDecoration2 ${KDECORATION2_MIN_VERSION} REQUIRED)
+find_package(KDecoration3 ${KDecoration3_MIN_VERSION} REQUIRED)
 
 include(ECMFindQmlModule)
 include(CheckIncludeFiles)
 include(KDECMakeSettings)
 include(KDEInstallDirs)
 
-set(KDECORATION2_VERSION_MAJOR ${KDecoration2_VERSION_MAJOR})
-set(KDECORATION2_VERSION_MINOR ${KDecoration2_VERSION_MINOR})
+set(KDecoration3_VERSION_MAJOR ${KDecoration3_VERSION_MAJOR})
+set(KDecoration3_VERSION_MINOR ${KDecoration3_VERSION_MINOR})
 
-message(STATUS "KDECORATION2 VERSION MAJOR : ${KDECORATION2_VERSION_MAJOR}")
-message(STATUS "KDECORATION2 VERSION MINOR : ${KDECORATION2_VERSION_MINOR}")
+message(STATUS "KDecoration3 VERSION MAJOR : ${KDecoration3_VERSION_MAJOR}")
+message(STATUS "KDecoration3 VERSION MINOR : ${KDecoration3_VERSION_MINOR}")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libappletdecoration/config-decoration.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/libappletdecoration/config-decoration.h)

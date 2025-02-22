@@ -34,7 +34,7 @@ add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Quick DBus Widgets)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons I18n Service ConfigWidgets KCMUtils)
-find_package(KDecoration2 REQUIRED)
+find_package(KDecoration3 REQUIRED)
 
 target_link_libraries(appletdecorationplugin
     Qt6::Core
@@ -48,8 +48,8 @@ target_link_libraries(appletdecorationplugin
     KF6::Service
     KF6::Svg
     KF6::KCMUtils
-    KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private
+    KDecoration3::KDecoration
+    KDecoration3::KDecoration3Private
 )
 
 # install plugin
