@@ -22,7 +22,7 @@
 #include "themeextended.h"
 #include "types.h"
 
-#include <KDecoration2/Decoration>
+#include <KDecoration3/Decoration>
 #include <QQmlEngine>
 #include <QtQml>
 
@@ -44,7 +44,7 @@ void AppletDecorationPlugin::registerTypes(const char *uri)
     qmlRegisterAnonymousType<Padding>("", 1);
     qmlRegisterAnonymousType<PreviewClient>("", 1);
     qmlRegisterAnonymousType<PreviewBridge>("", 1);
-    qmlRegisterAnonymousType<KDecoration2::Decoration>("", 1);
+    qmlRegisterAnonymousType<KDecoration3::Decoration>("", 1);
 
     qmlRegisterSingletonType<Environment>(uri, 0, 1, "Environment", &Environment::instance);
 }

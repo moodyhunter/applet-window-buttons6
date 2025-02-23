@@ -8,7 +8,7 @@ The provided `install.sh` script will build everything and install it for you. B
 
 - Ubuntu:
 ```
-sudo apt install g++ extra-cmake-modules qtbase5-dev qtdeclarative5-dev libkf5declarative-dev libkf5plasma-dev libkdecorations2-dev gettext
+sudo apt install g++ extra-cmake-modules qt6-base-dev qt6-declarative-dev libkf6declarative-dev libkf6plasma-dev kf6-ksvg-dev libkdecorations2-dev gettext
 ```
 - Fedora:
 ```

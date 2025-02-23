@@ -12,16 +12,15 @@
 #include "previewbridge.h"
 
 #include <KConfigGroup>
-#include <KDecoration2/Decoration>
-#include <KDecoration2/DecorationSettings>
-#include <KDecoration2/DecorationThemeProvider>
+#include <KDecoration3/Decoration>
+#include <KDecoration3/DecorationSettings>
+#include <KDecoration3/DecorationThemeProvider>
 #include <KDirWatch>
 #include <KPluginFactory>
 #include <KSharedConfig>
 #include <Plasma/PluginLoader>
 #include <QDebug>
 #include <QDir>
-#include <kdecoration2/decorationthemeprovider.h>
 #include <qloggingcategory.h>
 
 Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
@@ -32,7 +31,7 @@ static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 
 static const QString s_kwinrc = QStringLiteral("kwinrc");
-static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
+static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
 
 DecorationsModel::DecorationsModel(QObject *parent) : QAbstractListModel(parent)
 {
@@ -155,7 +154,7 @@ void DecorationsModel::init()
     const auto plugins = KPluginMetaData::findPlugins(s_pluginName);
     for (const auto &info : plugins)
     {
-        const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration2").toObject().toVariantMap();
+        const auto decoSettingsMap = info.rawData().value("org.kde.kdecoration3").toObject().toVariantMap();
 
         const QString &kns = findKNewStuff(decoSettingsMap);
         if (!kns.isEmpty() && !m_knsProvides.contains(kns))
@@ -171,7 +170,7 @@ void DecorationsModel::init()
                 continue;
             }
 
-            const auto themeProvider = KPluginFactory::instantiatePlugin<KDecoration2::DecorationThemeProvider>(info).plugin;
+            const auto themeProvider = KPluginFactory::instantiatePlugin<KDecoration3::DecorationThemeProvider>(info).plugin;
             for (const auto &t : themeProvider->themes())
             {
                 Data data;

@@ -43,7 +43,7 @@
 * create a new decoration only when it is really needed 
 * reduce filesystem trackers for scheme colors files
 * use shared decoration between all buttons
-* set an object name for the shared decoration in order to be easily identified by KDecoration2 decorations
+* set an object name for the shared decoration in order to be easily identified by KDecoration3 decorations
 
 #### Version 0.7.0
 
