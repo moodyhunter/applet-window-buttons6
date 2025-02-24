@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(applet_windowbuttons)
 
@@ -13,8 +15,8 @@ set(KDecoration3_MIN_VERSION "6.2.90")
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS Gui Qml Quick)
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons Declarative Package Svg)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS DBus Gui Qml Quick)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons Config Declarative Package Svg)
 find_package(Plasma "5.90" REQUIRED)
 find_package(KDecoration3 ${KDecoration3_MIN_VERSION} REQUIRED)
 

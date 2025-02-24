@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+SPDX-FileCopyrightText: 2024 Christian Tallner <chrtall@gmx.de>
+SPDX-License-Identifier: GPL-2.0-or-later
+-->
 <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
@@ -81,14 +86,9 @@
       <default>2</default>
       <label>it is used in order to inform settings window about the plasmoid form factor. 2=Horizontal and 3=Vertical</label>
     </entry>
-    <entry name="containmentType" type="Enum">
-      <choices>
-        <choice name="Loading" />
-        <choice name="Plasma" />
-        <choice name="Latte" />
-      </choices>
-      <label>it helps to enable/disable options that are specific to plasma or Latte panels</label>
-      <default>0</default>
+    <entry name="borderlessMaximizedWindows" type="Bool">
+      <default>false</default>
+      <label>Should KWin Setting BorderlessMaximizedWindows be enabled</label>
     </entry>
   </group>
 </kcfg>

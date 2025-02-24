@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 set(QT_MIN_VERSION "6.6.0")
@@ -6,9 +8,10 @@ set(KF6_MIN_VERSION "6.0.0")
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-include(KDEInstallDirs)
-include(KDECMakeSettings)
-include(KDECompilerSettings)
+set(kwin_xml /usr/${KDE_INSTALL_DBUSINTERFACEDIR}/org.kde.KWin.xml)
+message(STATUS "KWIN_XML Path : ${kwin_xml}")
+set(KWinConfig_SRCS)
+qt_add_dbus_interface(KWinConfig_SRCS ${kwin_xml} kwin_interface )
 
 set(appletdecoration_SRCS
     appletdecorationplugin.cpp
@@ -28,6 +31,8 @@ set(appletdecoration_SRCS
     schemesmodel.cpp
     themeextended.cpp
     types.cpp
+    kwinconfig.cpp
+    ${KWinConfig_SRCS}
 )
 
 add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
