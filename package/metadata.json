@@ -2,6 +2,10 @@
     "KPackageStructure": "Plasma/Applet",
     "KPlugin": {
         "Authors": [
+	    {
+		"Email": "mooodyhunter@outlook.com",
+		"Name": "Moody Liu"
+	    },
             {
                 "Email": "mvourlakos@gmail.com",
                 "Name": "Michail Vourlakos"
@@ -13,8 +17,8 @@
         "Id": "org.kde.windowbuttons",
         "License": "GPLv2",
         "Name": "Window Buttons",
-        "Version": "0.11.1",
-        "Website": "https://github.com/psifidotos/applet-window-buttons"
+        "Version": "0.14.0",
+        "Website": "https://github.com/moodyhunter/applet-window-buttons6"
     },
     "Keywords": "window buttons",
     "X-Plasma-API": "declarativeappletscript",
