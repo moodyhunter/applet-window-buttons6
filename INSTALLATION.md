@@ -12,7 +12,7 @@ sudo apt install g++ extra-cmake-modules qt6-base-dev qt6-declarative-dev libkf6
 ```
 - Fedora:
 ```
-sudo dnf install extra-cmake-modules qt5-qtdeclarative-devel kf5-plasma-devel kf5-kdeclarative-devel kf5-kconfigwidgets-devel kf5-ki18n-devel kdecoration-devel
+sudo dnf install extra-cmake-modules qt6-qtdeclarative-devel kf6-plasma-devel kf6-kdeclarative-devel kf6-kconfigwidgets-devel kf6-ki18n-devel kdecoration-devel kf6-ksvg-devel kf6-kcmutils-devel kwin-devel
 ```
 - Arch:
 ```
