@@ -17,18 +17,59 @@ ComboBox {
     model: sortedDecorations
     textRole: "display"
     valueRole: "plugin"
-    onActivated: {
-        var index = combobox.currentIndex;
-        if (index === -1)
-            return ;
+    function displayAt(row) {
+        if (row < 0)
+            return "";
 
-        console.log(currentTheme, combobox.currentText, combobox.currentValue);
+        return sortedDecorations.data(sortedDecorations.index(row, 0), Qt.DisplayRole);
+    }
+
+    displayText: combobox.displayAt(combobox.currentIndex)
+    function applySelection(row) {
+        if (row < 0)
+            return;
+
+        const modelIndex = sortedDecorations.index(row, 0);
+        const pluginRole = Qt.UserRole + 4;
+        const themeRole = Qt.UserRole + 5;
+
         root.useCurrent = false;
-        root.selectedPlugin = combobox.currentValue;
-        root.selectedTheme = combobox.currentText;
+        root.selectedPlugin = sortedDecorations.data(modelIndex, pluginRole);
+        root.selectedTheme = sortedDecorations.data(modelIndex, themeRole);
+    }
+
+    function syncCurrentIndexFromSelection() {
+        const pluginRole = Qt.UserRole + 4;
+        const themeRole = Qt.UserRole + 5;
+
+        for (let row = 0; row < sortedDecorations.rowCount(); ++row) {
+            const modelIndex = sortedDecorations.index(row, 0);
+            if (sortedDecorations.data(modelIndex, pluginRole) === root.currentPlugin &&
+                    sortedDecorations.data(modelIndex, themeRole) === root.currentTheme) {
+                combobox.currentIndex = row;
+                return;
+            }
+        }
+
+        combobox.currentIndex = -1;
+    }
+
+    onActivated: {
+        combobox.applySelection(combobox.currentIndex);
     }
     Component.onCompleted: {
-        combobox.currentIndex = combobox.find(root.currentTheme);
+        combobox.syncCurrentIndexFromSelection();
+    }
+    Connections {
+        function onCurrentThemeChanged() {
+            combobox.syncCurrentIndexFromSelection();
+        }
+
+        function onCurrentPluginChanged() {
+            combobox.syncCurrentIndexFromSelection();
+        }
+
+        target: root
     }
 
     Connections {
@@ -42,12 +83,12 @@ ComboBox {
     delegate: MouseArea {
         height: combobox.height
         width: combobox.width
+        implicitHeight: combobox.height
+        implicitWidth: combobox.width
         hoverEnabled: true
         onClicked: {
             combobox.currentIndex = index;
-            root.useCurrent = false;
-            root.selectedPlugin = plugin;
-            root.selectedTheme = theme;
+            combobox.applySelection(index);
             combobox.popup.close();
         }
 
@@ -73,7 +114,7 @@ ComboBox {
                 anchors.left: parent.left
                 anchors.leftMargin: Kirigami.Units.smallSpacing
                 anchors.verticalCenter: parent.verticalCenter
-                text: display
+                text: combobox.displayAt(index)
                 color: containsMouse ? palette.highlightedText : palette.text
             }
 

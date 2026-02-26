@@ -28,6 +28,7 @@ Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_defaultTheme;
 static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
+static const QString s_auroraePluginV2 = QStringLiteral("org.kde.kwin.aurorae.v2");
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 
 static const QString s_kwinrc = QStringLiteral("kwinrc");
@@ -178,7 +179,7 @@ void DecorationsModel::init()
                 data.themeName = t.themeName();
                 data.visibleName = t.visibleName();
 
-                if (data.pluginName == s_auroraePlugin && data.themeName.startsWith(s_auroraeSvgTheme))
+                if ((data.pluginName == s_auroraePlugin || data.pluginName == s_auroraePluginV2) && data.themeName.startsWith(s_auroraeSvgTheme))
                     data.isAuroraeTheme = true;
 
                 qCInfo(decorations_model) << "Adding theme" << data.visibleName << "from" << data.pluginName;

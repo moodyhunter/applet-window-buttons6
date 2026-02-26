@@ -13,6 +13,46 @@ import QtQuick.Layouts
 ComboBox {
     id: combobox
 
+    function fileAt(row) {
+        if (row < 0)
+            return "";
+
+        return combobox.model.data(combobox.model.index(row, 0), Qt.UserRole + 4);
+    }
+
+    function backgroundColorAt(row) {
+        if (row < 0)
+            return "transparent";
+
+        return combobox.model.data(combobox.model.index(row, 0), Qt.UserRole + 5);
+    }
+
+    function textColorAt(row) {
+        if (row < 0)
+            return palette.text;
+
+        return combobox.model.data(combobox.model.index(row, 0), Qt.UserRole + 6);
+    }
+
+    function displayAt(row) {
+        if (row < 0)
+            return "";
+
+        return combobox.model.data(combobox.model.index(row, 0), Qt.DisplayRole);
+    }
+
+    function applySelection(row) {
+        if (row < 0)
+            return;
+
+        selectedScheme = combobox.fileAt(row);
+    }
+
+    onActivated: {
+        combobox.applySelection(combobox.currentIndex);
+    }
+    displayText: combobox.displayAt(combobox.currentIndex)
+
     Connections {
         function onClosed() {
             root.forceActiveFocus();
@@ -24,10 +64,12 @@ ComboBox {
     delegate: MouseArea {
         width: combobox.width
         height: combobox.height
+        implicitHeight: combobox.height
+        implicitWidth: combobox.width
         hoverEnabled: true
         onClicked: {
             combobox.currentIndex = index;
-            selectedScheme = model.file;
+            combobox.applySelection(index);
             combobox.popup.close();
         }
 
@@ -56,12 +98,12 @@ ComboBox {
                     Layout.leftMargin: 2
                     width: 1.25 * label.height
                     height: label.height
-                    opacity: ((file == "kdeglobals") || (file == "_plasmatheme_")) ? 0 : 1
+                    opacity: ((combobox.fileAt(index) == "kdeglobals") || (combobox.fileAt(index) == "_plasmatheme_")) ? 0 : 1
 
                     Rectangle {
                         width: height
                         height: 0.75 * label.height
-                        color: backgroundColor
+                        color: combobox.backgroundColorAt(index)
                         border.width: 1
                         border.color: containsMouse || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
 
@@ -70,7 +112,7 @@ ComboBox {
                             anchors.verticalCenter: parent.bottom
                             width: parent.width
                             height: parent.height
-                            color: textColor
+                            color: combobox.textColorAt(index)
                             border.width: parent.border.width
                             border.color: parent.border.color
                         }
@@ -82,7 +124,7 @@ ComboBox {
                 Label {
                     id: label
 
-                    text: display
+                    text: combobox.displayAt(index)
                     color: containsMouse ? palette.highlightedText : palette.text
                 }
 
