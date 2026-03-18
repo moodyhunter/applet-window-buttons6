@@ -9,9 +9,24 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 ComboBox {
     id: combobox
+
+    popup: Popup {
+        y: combobox.height - 1
+        width: Math.max(combobox.width, 300)
+        height: Math.min(listView.contentHeight + topPadding + bottomPadding, 400)
+
+        contentItem: ListView {
+            id: listView
+            clip: true
+            model: combobox.delegateModel
+            currentIndex: combobox.currentIndex
+            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+        }
+    }
 
     Connections {
         function onClosed() {
@@ -21,75 +36,51 @@ ComboBox {
         target: popup
     }
 
-    delegate: MouseArea {
+    delegate: ItemDelegate {
+        id: delegateItem
+
         width: combobox.width
-        height: combobox.height
-        hoverEnabled: true
+        highlighted: combobox.currentIndex === index
+
         onClicked: {
             combobox.currentIndex = index;
             selectedScheme = model.file;
             combobox.popup.close();
         }
 
-        Rectangle {
-            id: delegateBackground
+        contentItem: RowLayout {
+            spacing: Kirigami.Units.smallSpacing
 
-            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5)
+            Item {
+                implicitWidth: 1.25 * label.implicitHeight
+                implicitHeight: label.implicitHeight
+                opacity: ((model.file == "kdeglobals") || (model.file == "_plasmatheme_")) ? 0 : 1
 
-            anchors.fill: parent
-            color: {
-                if (containsMouse)
-                    return palette.highlight;
-
-                if (combobox.currentIndex === index)
-                    return selectedColor;
-
-                return "transparent";
-            }
-
-            RowLayout {
-                id: delegateRow
-
-                height: parent.height
-
-                Item {
-                    Layout.leftMargin: 2
-                    width: 1.25 * label.height
-                    height: label.height
-                    opacity: ((file == "kdeglobals") || (file == "_plasmatheme_")) ? 0 : 1
+                Rectangle {
+                    width: height
+                    height: 0.75 * label.implicitHeight
+                    color: model.backgroundColor
+                    border.width: 1
+                    border.color: delegateItem.highlighted ? palette.highlightedText : palette.text
 
                     Rectangle {
-                        width: height
-                        height: 0.75 * label.height
-                        color: backgroundColor
-                        border.width: 1
-                        border.color: containsMouse || (combobox.currentIndex === index) ? palette.highlightedText : palette.text
-
-                        Rectangle {
-                            anchors.horizontalCenter: parent.right
-                            anchors.verticalCenter: parent.bottom
-                            width: parent.width
-                            height: parent.height
-                            color: textColor
-                            border.width: parent.border.width
-                            border.color: parent.border.color
-                        }
-
+                        anchors.horizontalCenter: parent.right
+                        anchors.verticalCenter: parent.bottom
+                        width: parent.width
+                        height: parent.height
+                        color: model.textColor
+                        border.width: parent.border.width
+                        border.color: parent.border.color
                     }
-
                 }
-
-                Label {
-                    id: label
-
-                    text: display
-                    color: containsMouse ? palette.highlightedText : palette.text
-                }
-
             }
 
+            Label {
+                id: label
+
+                text: model.display
+                color: delegateItem.highlighted ? palette.highlightedText : palette.text
+            }
         }
-
     }
-
 }
