@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-FileCopyrightText: 2026 Christian Tallner <chrtall@gmx.de>
  *
  * This file is part of the libappletdecoration library
  *
@@ -8,6 +9,8 @@
  */
 
 #include "themeextended.h"
+
+using namespace Qt::StringLiterals;
 
 #include "commontools.h"
 #include "schemecolors.h"
@@ -98,8 +101,8 @@ void ExtendedTheme::updateDefaultSchemeValues()
 
     if (originalPtr && defaultPtr)
     {
-        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_qs);
-        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_qs);
+        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_s);
+        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_s);
 
         defaultWMGroup.writeEntry("activeBackground", normalWindowGroup.readEntry("BackgroundNormal", QColor()));
         defaultWMGroup.writeEntry("activeForeground", normalWindowGroup.readEntry("ForegroundNormal", QColor()));

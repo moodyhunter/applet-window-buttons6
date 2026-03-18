@@ -1,5 +1,6 @@
 /*
  *  SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+ *  SPDX-FileCopyrightText: 2026 Christian Tallner <chrtall@gmx.de>
  *
  *  This file is part of the libappletdecoration library
  *
@@ -7,6 +8,8 @@
  */
 
 #include "auroraetheme.h"
+
+using namespace Qt::StringLiterals;
 
 #include "commontools.h"
 
@@ -174,8 +177,8 @@ void AuroraeTheme::loadSettings()
 
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);
 
-    const KConfigGroup generalGroup = KConfigGroup(rcPtr, u"General"_qs);
-    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, u"Layout"_qs);
+    const KConfigGroup generalGroup = KConfigGroup(rcPtr, u"General"_s);
+    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, u"Layout"_s);
 
     m_duration = generalGroup.readEntry("Animation", 0);
     m_buttonWidth = layoutGroup.readEntry("ButtonWidth", 24);
