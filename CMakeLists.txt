@@ -17,6 +17,11 @@ find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH}
 ${ECM_KDE_MODULE_DIR})
 
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(ECMFindQmlModule)
+include(CheckIncludeFiles)
+
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS
     DBus
     Gui
@@ -32,11 +37,6 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
 )
 find_package(Plasma "5.90" REQUIRED)
 find_package(KDecoration3 ${KDecoration3_MIN_VERSION} REQUIRED)
-
-include(ECMFindQmlModule)
-include(CheckIncludeFiles)
-include(KDECMakeSettings)
-include(KDEInstallDirs)
 
 set(KDecoration3_VERSION_MAJOR ${KDecoration3_VERSION_MAJOR})
 set(KDecoration3_VERSION_MINOR ${KDecoration3_VERSION_MINOR})
