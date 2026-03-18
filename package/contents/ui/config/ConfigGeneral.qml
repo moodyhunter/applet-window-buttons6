@@ -32,7 +32,7 @@ KCM.SimpleKCM {
     property alias cfg_lengthFirstMargin: lengthFirstSpn.value
     property alias cfg_lengthLastMargin: lengthLastSpn.value
     property alias cfg_lengthMarginsLock: lockItem.locked
-    //property var title
+
     // used as bridge to communicate properly between configuration and ui
     property bool useCurrent
     property string selectedPlugin
@@ -41,8 +41,6 @@ KCM.SimpleKCM {
     property string currentButtons
     // used from the ui
     readonly property bool selectedDecorationExists: decorations.decorationExists(root.selectedPlugin, root.selectedTheme)
-    readonly property real centerFactor: 0.3
-    readonly property int minimumWidth: 220
     property string currentPlugin: root.useCurrent || !selectedDecorationExists ? decorations.currentPlugin : root.selectedPlugin
     property string currentTheme: root.useCurrent || !selectedDecorationExists ? decorations.currentTheme : root.selectedTheme
 
@@ -106,210 +104,123 @@ KCM.SimpleKCM {
         sortRoleName: 'display'
         sortOrder: Qt.AscendingOrder
     }
+    ///END Decoration Items
 
-    ColumnLayout {
-        id: mainColumn
-        spacing: Kirigami.Units.largeSpacing
-        Layout.fillWidth: true
+    Kirigami.FormLayout {
 
-        RowLayout {
-            QQC2.Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Decoration:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            DecorationsComboBox {
-                id: decorationCmb
-
-                Layout.minimumWidth: 180
-                Layout.preferredWidth: 0.2 * root.width
-                Layout.maximumWidth: 300
-            }
-
+        // --- Decoration ---
+        DecorationsComboBox {
+            id: decorationCmb
+            Kirigami.FormData.label: i18n("Decoration:")
+            Layout.fillWidth: true
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 25
         }
 
-        RowLayout {
+        // --- Colors ---
+        ColorsComboBox {
+            id: colorsCmbBox
+            Kirigami.FormData.label: i18n("Colors:")
             visible: !auroraeThemeEngine.isEnabled
-
-            QQC2.Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Colors:")
-                horizontalAlignment: Text.AlignRight
+            Layout.fillWidth: true
+            Layout.maximumWidth: Kirigami.Units.gridUnit * 25
+            model: colorsModel
+            textRole: "display"
+            Component.onCompleted: {
+                currentIndex = colorsModel.indexOf(plasmoid.configuration.selectedScheme);
             }
+        }
 
-            ColorsComboBox {
-                id: colorsCmbBox
+        // --- Buttons ---
+        OrderableListView {
+            id: activeButtons
+            Kirigami.FormData.label: i18n("Buttons:")
 
-                Layout.minimumWidth: 250
-                Layout.preferredWidth: 0.3 * root.width
-                Layout.maximumWidth: 380
-                model: colorsModel
-                textRole: "display"
+            readonly property color schemesBackgroundColor: plasmaThemeExtended.isActive ? plasmaThemeExtended.colors.backgroundColor : colorsModel.backgroundOf(colorsCmbBox.currentIndex)
+
+            itemWidth: 38
+            itemHeight: 38
+            buttonsStr: root.currentButtons
+            orientation: ListView.Horizontal
+            color: !auroraeThemeEngine.isEnabled ? schemesBackgroundColor : auroraeThemeEngine.titleBackgroundColor
+            buttonSize: buttonSizeSpn.value
+            buttonsFirstMargin: lengthFirstSpn.value
+            buttonsLastMargin: lengthLastSpn.value
+            buttonsSpacing: spacingSpn.value
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+        }
+
+        // --- Metrics (Aurorae only) ---
+        QQC2.CheckBox {
+            id: decorationMetricsChk
+            Kirigami.FormData.label: i18n("Metrics:")
+            text: i18n("Use from decoration if any are found")
+            visible: auroraeThemeEngine.isEnabled
+        }
+
+        // --- Size ---
+        QQC2.SpinBox {
+            id: buttonSizeSpn
+            Kirigami.FormData.label: i18n("Size:")
+            from: 40
+            to: 100
+            enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+        }
+
+        // --- Spacing ---
+        QQC2.SpinBox {
+            id: spacingSpn
+            Kirigami.FormData.label: i18n("Spacing:")
+            from: 0
+            to: 24
+            enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
+        }
+
+        // --- Left / Top margin ---
+        RowLayout {
+            Kirigami.FormData.label: plasmoid.configuration.formFactor === PlasmaCore.Types.Horizontal ? i18n("Left margin:") : i18n("Top margin:")
+
+            QQC2.SpinBox {
+                id: lengthFirstSpn
+
+                property int lastValue: -1
+
+                from: 0
+                to: 24
+                onValueChanged: {
+                    if (lockItem.locked) {
+                        var step = value - lastValue > 0 ? 1 : -1;
+                        lastValue = value;
+                        lengthLastSpn.value = lengthLastSpn.value + step;
+                    }
+                }
                 Component.onCompleted: {
-                    currentIndex = colorsModel.indexOf(plasmoid.configuration.selectedScheme);
+                    lastValue = plasmoid.configuration.lengthFirstMargin;
                 }
             }
 
+            QQC2.ToolButton {
+                id: lockItem
+
+                property bool locked: true
+
+                icon.name: locked ? "lock" : "unlock"
+                opacity: locked ? 1.0 : 0.5
+                onClicked: locked = !locked
+            }
         }
 
-        GridLayout {
-            rowSpacing: Kirigami.Units.largeSpacing
-            columnSpacing: Kirigami.Units.largeSpacing
-            columns: 2
+        // --- Right / Bottom margin ---
+        QQC2.SpinBox {
+            id: lengthLastSpn
+            Kirigami.FormData.label: plasmoid.configuration.formFactor === PlasmaCore.Types.Horizontal ? i18n("Right margin:") : i18n("Bottom margin:")
 
-            QQC2.Label {
-                Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                text: i18n("Buttons:")
-                horizontalAlignment: Text.AlignRight
-            }
-
-            OrderableListView {
-                id: activeButtons
-
-                readonly property color schemesBackgroundColor: plasmaThemeExtended.isActive ? plasmaThemeExtended.colors.backgroundColor : colorsModel.backgroundOf(colorsCmbBox.currentIndex)
-
-                itemWidth: 38
-                itemHeight: 38
-                buttonsStr: root.currentButtons
-                orientation: ListView.Horizontal
-                color: !auroraeThemeEngine.isEnabled ? schemesBackgroundColor : auroraeThemeEngine.titleBackgroundColor
-                buttonSize: buttonSizeSpn.value
-                buttonsFirstMargin: lengthFirstSpn.value
-                buttonsLastMargin: lengthLastSpn.value
-                buttonsSpacing: spacingSpn.value
-            }
-
+            from: 0
+            to: 24
+            enabled: !lockItem.locked
         }
-
-        ColumnLayout {
-            id: visualSettings
-
-            GridLayout {
-                id: visualSettingsGroup1
-
-                columns: 2
-
-                QQC2.Label {
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Metrics:")
-                    horizontalAlignment: Text.AlignRight
-                    visible: auroraeThemeEngine.isEnabled
-                }
-
-                QQC2.CheckBox {
-                    id: decorationMetricsChk
-
-                    text: i18n("Use from decoration if any are found")
-                    visible: auroraeThemeEngine.isEnabled
-                }
-
-                QQC2.Label {
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Size:")
-                    horizontalAlignment: Text.AlignRight
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-                QQC2.SpinBox {
-                    id: buttonSizeSpn
-
-                    from: 40
-                    to: 100
-                    // suffix: " %"
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-                QQC2.Label {
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: i18n("Spacing:")
-                    horizontalAlignment: Text.AlignRight
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-                QQC2.SpinBox {
-                    id: spacingSpn
-
-                    from: 0
-                    to: 24
-                    // suffix: " " + i18nc("pixels","px.")
-                    enabled: !(auroraeThemeEngine.isEnabled && decorationMetricsChk.checked)
-                }
-
-            }
-
-            GridLayout {
-                id: visualSettingsGroup2
-
-                property int lockerHeight: firstLengthLbl.height + rowSpacing / 2
-
-                columns: 3
-                rows: 2
-                flow: GridLayout.TopToBottom
-                columnSpacing: visualSettingsGroup1.columnSpacing
-                rowSpacing: visualSettingsGroup1.rowSpacing
-
-                QQC2.Label {
-                    id: firstLengthLbl
-
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: plasmoid.configuration.formFactor === PlasmaCore.Types.Horizontal ? i18n("Left margin:") : i18n("Top margin:")
-                    horizontalAlignment: Text.AlignRight
-                }
-
-                QQC2.Label {
-                    Layout.minimumWidth: Math.max(centerFactor * root.width, minimumWidth)
-                    text: plasmoid.configuration.formFactor === PlasmaCore.Types.Horizontal ? i18n("Right margin:") : i18n("Bottom margin:")
-                    horizontalAlignment: Text.AlignRight
-                    enabled: !lockItem.locked
-                }
-
-                QQC2.SpinBox {
-                    // suffix: " " + i18nc("pixels","px.")
-
-                    id: lengthFirstSpn
-
-                    property int lastValue: -1
-
-                    from: 0
-                    to: 24
-                    onValueChanged: {
-                        if (lockItem.locked) {
-                            var step = value - lastValue > 0 ? 1 : -1;
-                            lastValue = value;
-                            lengthLastSpn.value = lengthLastSpn.value + step;
-                        }
-                    }
-                    Component.onCompleted: {
-                        lastValue = plasmoid.configuration.lengthFirstMargin;
-                    }
-                }
-
-                QQC2.SpinBox {
-                    id: lengthLastSpn
-
-                    from: 0
-                    to: 24
-                    // suffix: " " + i18nc("pixels","px.")
-                    enabled: !lockItem.locked
-                }
-
-                LockItem {
-                    id: lockItem
-
-                    Layout.minimumWidth: 40
-                    Layout.maximumWidth: 40
-                    Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-                    Layout.minimumHeight: visualSettingsGroup2.lockerHeight
-                    Layout.maximumHeight: Layout.minimumHeight
-                    Layout.topMargin: firstLengthLbl.height / 2
-                    Layout.rowSpan: 2
-                }
-
-            }
-
-        }
-
     }
 
 }
