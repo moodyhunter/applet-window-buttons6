@@ -1,5 +1,6 @@
 /*
  * SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-FileCopyrightText: 2026 Christian Tallner <chrtall@gmx.de>
  *
  * This file is part of the libappletdecoration library
  *

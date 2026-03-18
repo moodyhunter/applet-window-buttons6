@@ -1,11 +1,12 @@
-import "../../code/tools.js" as ModelTools
 /*
 *  SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+*  SPDX-FileCopyrightText: 2026 Christian Tallner <chrtall@gmx.de>
 *
 *  This file is part of applet-window-buttons
 *
 *  SPDX-License-Identifier: GPL-2.0-or-later
 */
+import "../../code/tools.js" as ModelTools
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
