@@ -78,11 +78,11 @@ Rectangle {
     radius: 4
     anchors.margins: margin
     Layout.minimumWidth: width
-    Layout.preferredWidth: Layout.minimumWidth
-    Layout.maximumWidth: Layout.maximumWidth
+    Layout.preferredWidth: width
+    Layout.maximumWidth: width
     Layout.minimumHeight: height
-    Layout.preferredHeight: Layout.minimumHeight
-    Layout.maximumHeight: Layout.maximumHeight
+    Layout.preferredHeight: height
+    Layout.maximumHeight: height
     width: listView.childrenRect.width + 2 * margin //(itemWidth+listView.spacing) * (orientation == ListView.Vertical ? 1 : controlButtonsModel.count) + 2 * margin
     height: listView.childrenRect.height + 2 * margin //(itemHeight+listView.spacing) * (orientation == ListView.Horizontal ? 1 : controlButtonsModel.count)
     Component.onCompleted: {
@@ -123,6 +123,7 @@ Rectangle {
         height: itemHeight
         model: controlButtonsModel
         orientation: listContent.orientation
+        interactive: false
         delegate: auroraeThemeEngine.isEnabled ? auroraeButtonComponent : pluginButtonComponent
         currentIndex: loc.initIndex
         onWidthChanged: coordinatesTimer.start()
@@ -147,33 +148,12 @@ Rectangle {
 
     }
 
-    MouseArea {
+    Item {
         id: loc
 
         property int initButton: -1 // Original button in model
         property int initIndex: -1 // Original position in model
-        property int index: listView.indexAt(mouseX, mouseY) // Item underneath cursor
         readonly property bool buttonIsDragged: initButton !== -1 || initIndex !== -1
-
-        anchors.fill: parent
-        pressAndHoldInterval: 200
-        cursorShape: Qt.DragMoveCursor
-        onPressAndHold: {
-            initIndex = listView.indexAt(mouseX, mouseY);
-            initButton = controlButtonsModel.get(initIndex).buttonType;
-        }
-        onReleased: {
-            initIndex = -1;
-            initButton = -1;
-        }
-        onPositionChanged: {
-            if (containsPress && initIndex !== -1 && index !== -1 && index !== initIndex) {
-                controlButtonsModel.move(initIndex, index, 1);
-                initIndex = index;
-                root.currentButtons = buttonsListStr();
-                listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
-            }
-        }
     }
 
     ///START Components
@@ -292,6 +272,32 @@ Rectangle {
 
             }
 
+            MouseArea {
+                anchors.fill: parent
+                preventStealing: true
+                cursorShape: Qt.DragMoveCursor
+                onPressed: {
+                    loc.initIndex = index;
+                    loc.initButton = buttonType;
+                }
+                onReleased: {
+                    loc.initIndex = -1;
+                    loc.initButton = -1;
+                }
+                onPositionChanged: {
+                    if (pressed && loc.initIndex !== -1) {
+                        var pos = mapToItem(listView, mouseX, mouseY);
+                        var newIdx = listView.indexAt(pos.x + listView.contentX, listView.height / 2);
+                        if (newIdx !== -1 && newIdx !== loc.initIndex) {
+                            controlButtonsModel.move(loc.initIndex, newIdx, 1);
+                            loc.initIndex = newIdx;
+                            root.currentButtons = listContent.buttonsListStr();
+                            listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+                        }
+                    }
+                }
+            }
+
         }
 
     }
@@ -390,6 +396,32 @@ Rectangle {
                     easing.type: Easing.Linear
                 }
 
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                preventStealing: true
+                cursorShape: Qt.DragMoveCursor
+                onPressed: {
+                    loc.initIndex = index;
+                    loc.initButton = buttonType;
+                }
+                onReleased: {
+                    loc.initIndex = -1;
+                    loc.initButton = -1;
+                }
+                onPositionChanged: {
+                    if (pressed && loc.initIndex !== -1) {
+                        var pos = mapToItem(listView, mouseX, mouseY);
+                        var newIdx = listView.indexAt(pos.x + listView.contentX, listView.height / 2);
+                        if (newIdx !== -1 && newIdx !== loc.initIndex) {
+                            controlButtonsModel.move(loc.initIndex, newIdx, 1);
+                            loc.initIndex = newIdx;
+                            root.currentButtons = listContent.buttonsListStr();
+                            listView.splitterIndex = ModelTools.indexOfSplitter(controlButtonsModel);
+                        }
+                    }
+                }
             }
 
         }
