@@ -8,16 +8,16 @@ The provided `install.sh` script will build everything and install it for you. B
 
 - Ubuntu:
 ```
-sudo apt install g++ extra-cmake-modules qt6-base-dev qt6-declarative-dev libkf6declarative-dev libkf6plasma-dev kf6-ksvg-dev libkdecorations2-dev gettext
+sudo apt install g++ cmake extra-cmake-modules qt6-base-dev qt6-declarative-dev libkf6declarative-dev libkf6coreaddons-dev libkf6config-dev libkf6package-dev kf6-ksvg-dev libkdecorations3-dev gettext
 ```
 - Fedora:
 ```
-sudo dnf install extra-cmake-modules qt5-qtdeclarative-devel kf5-plasma-devel kf5-kdeclarative-devel kf5-kconfigwidgets-devel kf5-ki18n-devel kdecoration-devel
+sudo dnf install gcc-c++ cmake extra-cmake-modules qt6-qtdeclarative-devel kf6-kcoreaddons-devel kf6-kconfig-devel kf6-kdeclarative-devel kf6-kpackage-devel kf6-ksvg-devel kdecoration-devel plasma-devel
 ```
 - Arch:
 ```
 sudo pacman -Syu
-sudo pacman -S gcc extra-cmake-modules plasma-framework gettext kdecoration
+sudo pacman -S gcc cmake extra-cmake-modules qt6-declarative kf6-coreaddons kf6-config kf6-declarative kf6-package kf6-svg kdecoration plasma
 ```
 
 ### Building and Installing
@@ -25,17 +25,4 @@ Once you have installed the dependencies listed above you can execute the build 
 
 ```
 sh install.sh
-```
-
-## Prebuilt Binaries
-
-- Ubuntu: You can install via a PPA on Ubuntu 18.04 (Bionic) or later including KDE Neon.
-```
-sudo add-apt-repository ppa:krisives/applet-window-buttons
-sudo apt install applet-window-buttons
-```
-
-- openSUSE: install the package from the official repo
-```
-sudo zypper in applet-window-buttons
 ```
