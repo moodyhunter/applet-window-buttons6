@@ -1,26 +1,7 @@
 # Window Buttons Applet
 
-This is a Plasma 5 applet that shows window buttons in your panels. This plasmoid is coming from [Latte land](https://phabricator.kde.org/source/latte-dock/repository/master/) but it can also support Plasma panels.
+This is a Plasma 6 applet that shows window buttons in your panels. This plasmoid was initially coming from [Latte land](https://phabricator.kde.org/source/latte-dock/repository/master/) but it can also support Plasma panels.
 
-<p align="center">
-<img src="https://i.imgur.com/4FItfte.gif" width="580"><br/>
-<i>slide in/out animation</i>
-</p>
-
-<p align="center">
-<img src="https://i.imgur.com/70qeMME.png" width="580"><br/>
-<i>Breeze decoration</i>
-</p>
-
-<p align="center">
-<img src="https://i.imgur.com/uEen6P0.png" width="580"><br/>
-<i>BreezeEnhanced decoration</i>
-</p>
-
-<p align="center">
-<img src="https://i.imgur.com/Zz20RXC.png" width="580"><br/>
-<i>Settings window</i>
-</p>
 
 # Requires
 
@@ -35,7 +16,7 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 **KF6 modules**: CoreAddons Config ConfigWidgets Declarative I18n KCMUtils Package Service Svg
 
-**Build tools**: extra-cmake-modules gettext
+**Build tools**: extra-cmake-modules ninja
 
 
 # Install
