@@ -5,13 +5,12 @@
  *
  *  SPDX-License-Identifier: GPL-2.0-or-later
 */
+#ifndef APPLET_WINDOWBUTTONS_KWINCONFIG_H
+#define APPLET_WINDOWBUTTONS_KWINCONFIG_H
 #include <KConfig>
 #include <KConfigGroup>
 #include <QObject>
 #include "kwin_interface.h"
-#ifndef APPLET_WINDOWBUTTONS_KWINCONFIG_H
-#define APPLET_WINDOWBUTTONS_KWINCONFIG_H
-
 
 class KWinConfig : public QObject
 {

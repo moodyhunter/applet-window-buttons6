@@ -28,10 +28,14 @@ Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_defaultTheme;
 static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
+static const QString s_auroraeV2Plugin = QStringLiteral("org.kde.kwin.aurorae.v2");
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 
 static const QString s_kwinrc = QStringLiteral("kwinrc");
+// Plugin search namespace (KPluginMetaData subdirectory):
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
+// KWin config group in kwinrc (kept as kdecoration2 for backward compat across Plasma versions):
+static const QString s_kwinConfigGroup = QStringLiteral("org.kde.kdecoration2");
 
 DecorationsModel::DecorationsModel(QObject *parent) : QAbstractListModel(parent)
 {
@@ -171,6 +175,11 @@ void DecorationsModel::init()
             }
 
             const auto themeProvider = KPluginFactory::instantiatePlugin<KDecoration3::DecorationThemeProvider>(info).plugin;
+            if (!themeProvider)
+            {
+                qWarning(decorations_model) << "Failed to instantiate DecorationThemeProvider for" << info.pluginId();
+                continue;
+            }
             for (const auto &t : themeProvider->themes())
             {
                 Data data;
@@ -180,6 +189,8 @@ void DecorationsModel::init()
 
                 if (data.pluginName == s_auroraePlugin && data.themeName.startsWith(s_auroraeSvgTheme))
                     data.isAuroraeTheme = true;
+                else if (data.pluginName == s_auroraeV2Plugin)
+                    data.isAuroraeTheme = true; // v2 plugin: all themes are SVG-based
 
                 qCInfo(decorations_model) << "Adding theme" << data.visibleName << "from" << data.pluginName;
                 m_plugins.emplace_back(std::move(data));
@@ -205,7 +216,7 @@ void DecorationsModel::init()
 
 void DecorationsModel::loadCurrents()
 {
-    const KConfigGroup config = KSharedConfig::openConfig(s_kwinrc)->group(s_pluginName);
+    const KConfigGroup config = KSharedConfig::openConfig(s_kwinrc)->group(s_kwinConfigGroup);
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
 

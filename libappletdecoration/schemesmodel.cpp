@@ -115,10 +115,17 @@ void SchemesModel::initSchemes()
     qDeleteAll(m_schemes);
     m_schemes.clear();
 
+    // Index 0: "Current" — colors from the active color scheme (kdeglobals)
     QString currentSchemePath = SchemeColors::possibleSchemeFile("kdeglobals");
-    insertSchemeInList(currentSchemePath);
+    m_schemes.append(new SchemeColors(this, currentSchemePath));
     m_defaultSchemeFile = currentSchemePath;
 
+    // Index 1: "Plasma Theme" — colors derived from the active Plasma theme, not a .colors file.
+    // We store the current scheme path for its color preview data; data() hardcodes the
+    // display name and file role ("_plasmatheme_") for this fixed position.
+    m_schemes.append(new SchemeColors(this, currentSchemePath));
+
+    // Indices 2+: file-based color schemes, sorted alphabetically
     QStringList standardPaths = standardPathsFor("color-schemes");
 
     QStringList registeredSchemes;
