@@ -9,8 +9,8 @@ set(VERSION 0.12.0)
 set(AUTHOR "Michail Vourlakos")
 set(EMAIL "mvourlakos@gmail.com")
 
-set(QT_MIN_VERSION "6.7.0")
-set(KF6_MIN_VERSION "6.10.0")
+set(QT_MIN_VERSION "6.10.0")
+set(KF6_MIN_VERSION "6.22.0")
 set(KDecoration3_MIN_VERSION "6.2.90")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
@@ -35,7 +35,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     Package
     Svg
 )
-find_package(Plasma "5.90" REQUIRED)
+find_package(Plasma "6.6.0" REQUIRED)
 find_package(KDecoration3 ${KDecoration3_MIN_VERSION} REQUIRED)
 
 set(KDecoration3_VERSION_MAJOR ${KDecoration3_VERSION_MAJOR})

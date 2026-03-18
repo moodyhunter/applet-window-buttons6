@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
+# SPDX-FileCopyrightText: 2024 Christian Tallner <chrtall@gmx.de>
 # SPDX-License-Identifier: GPL-2.0-or-later
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-set(QT_MIN_VERSION "6.6.0")
-set(KF6_MIN_VERSION "6.0.0")
+set(QT_MIN_VERSION "6.10.0")
+set(KF6_MIN_VERSION "6.22.0")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})

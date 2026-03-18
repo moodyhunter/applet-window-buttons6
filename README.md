@@ -26,14 +26,16 @@ This is a Plasma 5 applet that shows window buttons in your panels. This plasmoi
 
 - C++20 compiler (GCC 10+, Clang 12+)
 - CMake >= 3.20
-- Qt >= 6.7
-- KF6 >= 6.10
-- Plasma >= 6.0
+- Qt >= 6.10
+- KF6 >= 6.22
+- Plasma >= 6.6
 - KDecoration3 >= 6.2.90
 
-**Qt6 elements**: DBus Gui Qml Quick
+**Qt6 modules**: Core DBus Gui Qml Quick Widgets
 
-**KF6 elements**: CoreAddons Config Declarative Package Svg extra-cmake-modules
+**KF6 modules**: CoreAddons Config ConfigWidgets Declarative I18n KCMUtils Package Service Svg
+
+**Build tools**: extra-cmake-modules gettext
 
 
 # Install
