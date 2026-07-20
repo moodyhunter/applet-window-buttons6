@@ -65,7 +65,6 @@ void PreviewBridge::setPlugin(const QString &plugin)
         return;
 
     m_plugin = plugin;
-    qDebug() << "Plugin changed to: " << m_plugin;
     emit pluginChanged();
 }
 
@@ -95,16 +94,17 @@ void PreviewBridge::createFactory()
     if (m_plugin.isNull())
     {
         setValid(false);
-        qDebug() << "Plugin not set";
         return;
     }
 
-    qDebug() << "Searching for plugins: " << m_plugin;
-
     const auto plugins = KPluginMetaData::findPluginById("org.kde.kdecoration3", m_plugin);
+    if (!plugins.isValid())
+    {
+        setValid(false);
+        return;
+    }
 
     m_factory = KPluginFactory::loadFactory(plugins).plugin;
-    qDebug() << "Factory: " << !m_factory.isNull();
     setValid(!m_factory.isNull());
     reconfigure();
 }

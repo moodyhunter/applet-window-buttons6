@@ -151,7 +151,7 @@ QString SchemeColors::possibleSchemeFile(QString scheme)
         if (QFileInfo(settingsFile).exists())
         {
             KSharedConfigPtr filePtr = KSharedConfig::openConfig(settingsFile);
-            KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_qs);
+            KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_s);
             tempScheme = generalGroup.readEntry("ColorScheme", "BreezeLight");
         }
     }
@@ -184,7 +184,7 @@ QString SchemeColors::schemeName(QString originalFile)
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(originalFile);
-    KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_qs);
+    KConfigGroup generalGroup = KConfigGroup(filePtr, u"General"_s);
 
     return generalGroup.readEntry("Name", fileNameNoExt);
 }
@@ -197,11 +197,11 @@ void SchemeColors::updateScheme()
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(m_schemeFile);
-    KConfigGroup wmGroup = KConfigGroup(filePtr, u"WM"_qs);
-    KConfigGroup selGroup = KConfigGroup(filePtr, u"Colors:Selection"_qs);
-    KConfigGroup viewGroup = KConfigGroup(filePtr, u"Colors:View"_qs);
+    KConfigGroup wmGroup = KConfigGroup(filePtr, u"WM"_s);
+    KConfigGroup selGroup = KConfigGroup(filePtr, u"Colors:Selection"_s);
+    KConfigGroup viewGroup = KConfigGroup(filePtr, u"Colors:View"_s);
     // KConfigGroup windowGroup = KConfigGroup(filePtr, "Colors:Window");
-    KConfigGroup buttonGroup = KConfigGroup(filePtr, u"Colors:Button"_qs);
+    KConfigGroup buttonGroup = KConfigGroup(filePtr, u"Colors:Button"_s);
 
     if (!m_basedOnPlasmaTheme)
     {

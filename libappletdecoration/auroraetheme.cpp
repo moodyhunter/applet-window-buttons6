@@ -19,6 +19,8 @@
 #include <QFileInfo>
 #include <QRgb>
 
+using namespace Qt::StringLiterals;
+
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 static const QString s_auroraerc = QStringLiteral("auroraerc");
 static int i_buttonSizeStep = 4;
@@ -174,8 +176,8 @@ void AuroraeTheme::loadSettings()
 
     KSharedConfigPtr rcPtr = KSharedConfig::openConfig(rc);
 
-    const KConfigGroup generalGroup = KConfigGroup(rcPtr, u"General"_qs);
-    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, u"Layout"_qs);
+    const KConfigGroup generalGroup = KConfigGroup(rcPtr, u"General"_s);
+    const KConfigGroup layoutGroup = KConfigGroup(rcPtr, u"Layout"_s);
 
     m_duration = generalGroup.readEntry("Animation", 0);
     m_buttonWidth = layoutGroup.readEntry("ButtonWidth", 24);
@@ -206,7 +208,7 @@ void AuroraeTheme::parseThemeImages()
 
     if (!QFileInfo(origBackgroundFilePath).exists())
     {
-        qDebug() << "Aurorare decoration file was not found for theme: " << m_themeName;
+        qWarning() << "Aurorae decoration file was not found for theme:" << m_themeName;
         return;
     }
 

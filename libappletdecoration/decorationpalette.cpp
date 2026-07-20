@@ -99,7 +99,7 @@ void DecorationPalette::update()
 
     if (!wmConfig.exists() && !m_colorScheme.endsWith(QStringLiteral("/kdeglobals")))
     {
-        qDebug() << "Invalid color scheme" << m_colorScheme << "lacks WM group";
+        qWarning() << "Invalid color scheme" << m_colorScheme << "lacks WM group";
         return;
     }
 

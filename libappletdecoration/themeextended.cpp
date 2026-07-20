@@ -15,10 +15,11 @@
 #include <KConfigGroup>
 #include <KDirWatch>
 #include <KSharedConfig>
-#include <QDebug>
 #include <QDir>
 
 #define DEFAULTCOLORSCHEME "default.colors"
+
+using namespace Qt::StringLiterals;
 
 ExtendedTheme::ExtendedTheme(QObject *parent) : QObject(parent)
 {
@@ -52,8 +53,6 @@ void ExtendedTheme::setOriginalSchemeFile(const QString &file)
 
     m_originalSchemePath = file;
 
-    qDebug() << "Window Buttons : plasma theme original colors ::: " << m_originalSchemePath;
-
     updateDefaultScheme();
 
     emit themeChanged();
@@ -85,8 +84,6 @@ void ExtendedTheme::updateDefaultScheme()
     m_colorsScheme = new SchemeColors(this, m_colorsSchemePath, true);
     connect(m_colorsScheme, &SchemeColors::colorsChanged, this, &ExtendedTheme::themeChanged);
 
-    qDebug() << "Window Buttons : plasma theme default colors ::: " << m_colorsSchemePath;
-
     emit colorsChanged();
 }
 
@@ -98,8 +95,8 @@ void ExtendedTheme::updateDefaultSchemeValues()
 
     if (originalPtr && defaultPtr)
     {
-        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_qs);
-        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_qs);
+        KConfigGroup normalWindowGroup(originalPtr, u"Colors:Window"_s);
+        KConfigGroup defaultWMGroup(defaultPtr, u"WM"_s);
 
         defaultWMGroup.writeEntry("activeBackground", normalWindowGroup.readEntry("BackgroundNormal", QColor()));
         defaultWMGroup.writeEntry("activeForeground", normalWindowGroup.readEntry("ForegroundNormal", QColor()));
@@ -120,10 +117,6 @@ void ExtendedTheme::loadThemePaths()
     {
         m_themeWidgetsPath = standardPath("plasma/desktoptheme/default/widgets");
     }
-
-    qDebug() << "Window Buttons : current plasma theme ::: " << m_theme.themeName();
-    qDebug() << "Window Buttons : theme path ::: " << m_themePath;
-    qDebug() << "Window Buttons : theme widgets path ::: " << m_themeWidgetsPath;
 
     //! clear kde connections
     for (auto &c : m_kdeConnections)
