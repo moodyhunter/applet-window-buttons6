@@ -1,14 +1,11 @@
 # SPDX-FileCopyrightText: 2018 Michail Vourlakos <mvourlakos@gmail.com>
 # SPDX-License-Identifier: GPL-2.0-or-later
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
-set(QT_MIN_VERSION "6.6.0")
-set(KF6_MIN_VERSION "6.0.0")
-
-find_package(ECM 0.0.11 REQUIRED NO_MODULE)
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-set(kwin_xml /usr/${KDE_INSTALL_DBUSINTERFACEDIR}/org.kde.KWin.xml)
+set(kwin_xml "${KDE_INSTALL_FULL_DBUSINTERFACEDIR}/org.kde.KWin.xml")
 message(STATUS "KWIN_XML Path : ${kwin_xml}")
 set(KWinConfig_SRCS)
 qt_add_dbus_interface(KWinConfig_SRCS ${kwin_xml} kwin_interface )
@@ -39,7 +36,7 @@ add_library(appletdecorationplugin SHARED ${appletdecoration_SRCS})
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Quick DBus Widgets)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons I18n Service ConfigWidgets KCMUtils)
-find_package(KDecoration3 REQUIRED)
+find_package(KDecoration3 ${KDecoration3_MIN_VERSION} REQUIRED)
 
 target_link_libraries(appletdecorationplugin
     Qt6::Core

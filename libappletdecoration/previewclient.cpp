@@ -353,12 +353,10 @@ void PreviewClient::setBordersTopEdge(bool enabled)
 void PreviewClient::requestShowToolTip(const QString &text)
 {
     Q_UNUSED(text)
-    // qDebug() << "tooltip show requested with text:" << text;
 }
 
 void PreviewClient::requestHideToolTip()
 {
-    // qDebug() << "tooltip hide requested";
 }
 
 QSizeF PreviewClient::size() const
@@ -379,7 +377,6 @@ void PreviewClient::requestClose()
 
 void PreviewClient::requestContextHelp()
 {
-    qDebug() << "context help requested";
 }
 
 void PreviewClient::requestToggleMaximization(Qt::MouseButtons buttons)

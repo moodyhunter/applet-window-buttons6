@@ -20,24 +20,21 @@ PlasmoidItem {
     property int animatedMinimumWidth: minimumWidth
     property int animatedMinimumHeight: minimumHeight
     property int screen: plasmoid.containment.screen
+    readonly property bool maximizedWindowVisibility: visibility === AppletDecoration.Types.ActiveMaximizedWindow || visibility === AppletDecoration.Types.MaximizedWindowExists
     readonly property bool inEditMode: plasmoid.userConfiguring || plasmoid.containment.corona.editMode
     readonly property bool mustHide: {
         if (visibility === AppletDecoration.Types.AlwaysVisible || inEditMode)
             return false;
 
-        if (visibility === AppletDecoration.Types.ActiveWindow && !existsWindowActive)
-            return true;
-
-        if (visibility === AppletDecoration.Types.ActiveMaximizedWindow && (!isLastActiveWindowMaximized || !existsWindowActive))
-            return true;
-
-        if (visibility === AppletDecoration.Types.ShownWindowExists && !existsWindowShown)
+        if (!lastActiveTaskItem || !existsWindowShown || !isLastActiveWindowBorderless)
             return true;
 
         return false;
     }
     readonly property bool selectedDecorationExists: decorations.decorationExists(plasmoid.configuration.selectedPlugin, plasmoid.configuration.selectedTheme)
     readonly property bool slideAnimationEnabled: ((visibility !== AppletDecoration.Types.AlwaysVisible) && (plasmoid.configuration.hiddenState === AppletDecoration.Types.SlideOut))
+    readonly property int slideAnimationDuration: plasmoid.configuration.customSlideAnimation ? plasmoid.configuration.slideAnimationDuration : 250
+    readonly property int slideAnimationAcceleration: plasmoid.configuration.customSlideAnimation ? plasmoid.configuration.slideAnimationAcceleration : 2
     readonly property bool isEmptySpaceEnabled: plasmoid.configuration.hiddenState === AppletDecoration.Types.EmptySpace
     readonly property int visibility: plasmoid.configuration.visibility
     readonly property bool perScreenActive: plasmoid.configuration.perScreenActive
@@ -84,12 +81,18 @@ PlasmoidItem {
     //! make sure that on startup it will always be shown
     readonly property bool existsWindowActive: (windowInfoLoader.item && windowInfoLoader.item.existsWindowActive)
     readonly property bool existsWindowShown: (windowInfoLoader.item && windowInfoLoader.item.existsWindowShown)
+    readonly property bool existsMaximizedWindow: (windowInfoLoader.item && windowInfoLoader.item.existsMaximizedWindow)
+    readonly property bool blocksInactiveWindowActions: inactiveStateEnabled && windowInfoLoader.item && windowInfoLoader.item.focusOutsideTaskModel
+    readonly property bool dimsInactiveWindowActions: inactiveStateEnabled && windowInfoLoader.item && windowInfoLoader.item.targetObscuredByTrackedWindow
+    readonly property real inactiveDimOpacity: 0.62
     readonly property bool isLastActiveWindowPinned: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isOnAllDesktops
     readonly property bool isLastActiveWindowMaximized: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximized
+    readonly property bool isLastActiveWindowActive: windowInfoLoader.item && windowInfoLoader.item.targetWindowIsActive
     readonly property bool isLastActiveWindowKeepAbove: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isKeepAbove
     readonly property bool isLastActiveWindowClosable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isClosable
     readonly property bool isLastActiveWindowMaximizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMaximizable
     readonly property bool isLastActiveWindowMinimizable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isMinimizable
+    readonly property bool isLastActiveWindowBorderless: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.hasNoBorder
     readonly property bool isLastActiveWindowVirtualDesktopsChangeable: lastActiveTaskItem && existsWindowShown && lastActiveTaskItem.isVirtualDesktopsChangeable
     property bool hasDesktopsButton: false
     property bool hasMaximizedButton: false
@@ -114,7 +117,6 @@ PlasmoidItem {
     }
 
     function initializeControlButtonsModel() {
-        console.log("recreating buttons");
         sharedDecorationItem.createDecoration();
         var buttonsList = buttonsStr.split('|');
         ModelTools.initializeControlButtonsModel(buttonsList, tasksPreparedArray, controlButtonsModel, true);
@@ -138,6 +140,9 @@ PlasmoidItem {
     }
 
     function performActiveWindowAction(windowOperation) {
+        if (blocksInactiveWindowActions)
+            return;
+
         if (windowOperation === AppletDecoration.Types.ActionClose)
             windowInfoLoader.item.toggleClose();
         else if (windowOperation === AppletDecoration.Types.ToggleMaximize)
@@ -148,6 +153,19 @@ PlasmoidItem {
             windowInfoLoader.item.togglePinToAllDesktops();
         else if (windowOperation === AppletDecoration.Types.ToggleKeepAbove)
             windowInfoLoader.item.toggleKeepAbove();
+    }
+
+    function slideAnimationEasingType() {
+        if (slideAnimationAcceleration <= 0)
+            return Easing.Linear;
+        if (slideAnimationAcceleration === 1)
+            return Easing.InQuad;
+        if (slideAnimationAcceleration === 2)
+            return Easing.InCubic;
+        if (slideAnimationAcceleration === 3)
+            return Easing.InQuart;
+
+        return Easing.InQuint;
     }
 
     clip: true
@@ -170,6 +188,7 @@ PlasmoidItem {
         return PlasmaCore.Types.ActiveStatus;
     }
     onButtonsStrChanged: initButtons()
+    onLastActiveTaskItemChanged: initButtons()
     Component.onCompleted: {
         if (plasmoid.configuration.buttons.indexOf("9") === -1)
             plasmoid.configuration.buttons = plasmoid.configuration.buttons.concat("|9");
@@ -315,7 +334,11 @@ PlasmoidItem {
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (root.inactiveStateEnabled && !root.existsWindowActive)
+                // Per-screen: when perScreenActive is on and a local window is shown,
+                // keep buttons bright even if global focus moved to another screen.
+                var perScreenLocalContext = root.perScreenActive && root.existsWindowShown;
+
+                if (root.blocksInactiveWindowActions || (!perScreenLocalContext && root.inactiveStateEnabled && root.existsWindowShown && !root.isLastActiveWindowActive && !root.dimsInactiveWindowActions))
                     return false;
 
                 return true;
@@ -325,7 +348,8 @@ PlasmoidItem {
             isKeepAbove: root.isLastActiveWindowKeepAbove
             localX: x
             localY: y
-            opacity: isVisible ? 1 : 0
+            enabled: !root.blocksInactiveWindowActions
+            opacity: isVisible ? (root.dimsInactiveWindowActions ? root.inactiveDimOpacity : 1) : 0
             visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
@@ -384,7 +408,11 @@ PlasmoidItem {
             isActive: {
                 //!   FIXME-TEST PERIOD: Disabled because it shows an error from c++ theme when its value is changed
                 //!   and breaks in some cases the buttons coloring through the schemeFile
-                if (root.inactiveStateEnabled && !root.existsWindowActive)
+                // Per-screen: when perScreenActive is on and a local window is shown,
+                // keep buttons bright even if global focus moved to another screen.
+                var perScreenLocalContext = root.perScreenActive && root.existsWindowShown;
+
+                if (root.blocksInactiveWindowActions || (!perScreenLocalContext && root.inactiveStateEnabled && root.existsWindowShown && !root.isLastActiveWindowActive && !root.dimsInactiveWindowActions))
                     return false;
 
                 return true;
@@ -396,7 +424,8 @@ PlasmoidItem {
             auroraeTheme: auroraeThemeEngine
             monochromeIconsEnabled: auroraeThemeEngine.hasMonochromeIcons
             monochromeIconsColor: "transparent"
-            opacity: isVisible ? 1 : 0
+            enabled: !root.blocksInactiveWindowActions
+            opacity: isVisible ? (root.dimsInactiveWindowActions ? root.inactiveDimOpacity : 1) : 0
             visible: (isVisible && !root.isEmptySpaceEnabled) || root.isEmptySpaceEnabled
             onClicked: {
                 root.performActiveWindowAction(windowOperation);
@@ -422,8 +451,8 @@ PlasmoidItem {
         enabled: slideAnimationEnabled && plasmoid.formFactor === PlasmaCore.Types.Horizontal
 
         NumberAnimation {
-            duration: 250
-            easing.type: Easing.InCubic
+            duration: root.slideAnimationDuration
+            easing.type: root.slideAnimationEasingType()
         }
 
     }
@@ -432,8 +461,8 @@ PlasmoidItem {
         enabled: slideAnimationEnabled && plasmoid.formFactor === PlasmaCore.Types.Vertical
 
         NumberAnimation {
-            duration: 250
-            easing.type: Easing.InCubic
+            duration: root.slideAnimationDuration
+            easing.type: root.slideAnimationEasingType()
         }
 
     }

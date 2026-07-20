@@ -42,7 +42,7 @@ SpaceAfterTemplateKeyword: false
 SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: true
 SpacesInParentheses: false
-Standard: c++17
+Standard: c++20
 StatementMacros: [Q_UNUSED LOG DEBUG]
 # ForEachMacros: [list_foreach]
 TabWidth: 4

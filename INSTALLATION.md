@@ -1,41 +1,38 @@
-Installation
-============
+# Installation
 
-## Building from Source
-The provided `install.sh` script will build everything and install it for you. Before running the installation script you have to install the dependencies needed for compiling.
+## Building from source
 
-### Build Dependencies
+Install the Plasma 6 / KDecoration3 development dependencies first. Plasma 6.4
+or newer is required for the Task Manager `HasNoBorder` role used to follow
+native-titlebar changes.
 
-- Ubuntu:
-```
-sudo apt install g++ extra-cmake-modules qt6-base-dev qt6-declarative-dev libkf6declarative-dev libkf6plasma-dev kf6-ksvg-dev libkdecorations2-dev gettext
-```
-- Fedora:
-```
-sudo dnf install extra-cmake-modules qt5-qtdeclarative-devel kf5-plasma-devel kf5-kdeclarative-devel kf5-kconfigwidgets-devel kf5-ki18n-devel kdecoration-devel
-```
-- Arch:
-```
+### Arch
+
+```bash
 sudo pacman -Syu
-sudo pacman -S gcc extra-cmake-modules plasma-framework gettext kdecoration
+sudo pacman -S base-devel cmake extra-cmake-modules qt6-base qt6-declarative kcoreaddons kconfig kdecoration ksvg libplasma plasma-workspace
 ```
 
-### Building and Installing
-Once you have installed the dependencies listed above you can execute the build and install script:
+### Fedora
 
-```
-sh install.sh
-```
+Package names vary by Fedora/KDE spin, but the required development families are
+Qt 6, KF6, Plasma 6, KDecoration3, CMake, and ECM:
 
-## Prebuilt Binaries
-
-- Ubuntu: You can install via a PPA on Ubuntu 18.04 (Bionic) or later including KDE Neon.
-```
-sudo add-apt-repository ppa:krisives/applet-window-buttons
-sudo apt install applet-window-buttons
+```bash
+sudo dnf install gcc-c++ cmake extra-cmake-modules qt6-qtbase-devel qt6-qtdeclarative-devel kf6-kcoreaddons-devel kf6-kconfig-devel kf6-ksvg-devel plasma-workspace-devel kdecoration-devel
 ```
 
-- openSUSE: install the package from the official repo
-```
-sudo zypper in applet-window-buttons
+### Ubuntu / KDE neon
+
+KDecoration3 packaging names vary across Ubuntu releases. Use KDE neon or a
+Plasma 6-capable Ubuntu release and install the Qt 6, KF6, Plasma 6, and
+KDecoration3 development packages available for that release.
+
+## Building and installing
+
+```bash
+cmake -B build -S .
+cmake --build build
+sudo cmake --install build
+systemctl --user restart plasma-plasmashell.service
 ```

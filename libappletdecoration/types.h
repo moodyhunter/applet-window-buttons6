@@ -64,7 +64,8 @@ class Types
         AlwaysVisible = 0,
         ActiveWindow,
         ActiveMaximizedWindow,
-        ShownWindowExists
+        ShownWindowExists,
+        MaximizedWindowExists
     };
     Q_ENUM(Visibility)
 

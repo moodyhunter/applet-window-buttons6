@@ -8,7 +8,6 @@
 
 #include "environment.h"
 
-#include <QDebug>
 #include <QProcess>
 #include <plasma_version.h>
 
@@ -16,10 +15,7 @@ Environment::Environment(QObject *parent) : QObject(parent)
 {
 }
 
-Environment::~Environment()
-{
-    qDebug() << staticMetaObject.className() << "destructed";
-}
+Environment::~Environment() = default;
 
 uint Environment::frameworksVersion() const
 {
@@ -53,7 +49,6 @@ uint Environment::identifyPlasmaDesktopVersion()
 
     if (stringSplit.count() >= 2)
     {
-        qDebug() << " /////////////////////////";
         QString cleanVersionString = stringSplit[1].remove("\n");
         QStringList plasmaDesktopVersionParts = cleanVersionString.split(".");
 
@@ -68,16 +63,9 @@ uint Environment::identifyPlasmaDesktopVersion()
 
                 uint desktopVersion = makeVersion(maj, min, rel);
 
-                QString message("Plasma Desktop version:  " + QString::number(maj) + "." + QString::number(min) + "." + QString::number(rel) + " (" +
-                                QString::number(desktopVersion) + ")");
-                qDebug() << message;
-                qDebug() << " /////////////////////////";
-
                 return desktopVersion;
             }
         }
-
-        qDebug() << " /////////////////////////";
     }
 
     return 0;

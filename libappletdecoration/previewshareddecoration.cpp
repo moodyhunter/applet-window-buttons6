@@ -38,12 +38,15 @@ void SharedDecoration::setBridge(PreviewBridge *bridge)
 
     if (m_bridge)
     {
-        connect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
+        disconnect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
     }
 
     m_bridge = bridge;
 
-    connect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
+    if (m_bridge)
+    {
+        connect(m_bridge, &PreviewBridge::validChanged, this, &SharedDecoration::createDecoration);
+    }
 
     emit bridgeChanged();
 }
