@@ -1,5 +1,55 @@
 ### CHANGELOG
 
+#### Unreleased
+
+* Follow KWin's `HasNoBorder` state dynamically: show panel controls for
+  borderless floating, tiled, and maximized windows, and hide them as soon as a
+  native titlebar is enabled. Always Visible and panel edit mode remain explicit
+  overrides.
+* Prefer active, then maximized, then most-recent borderless targets while
+  preserving the existing fallback target for window state and actions.
+* Require Plasma 6.4 or newer for the Task Manager `HasNoBorder` role.
+* Fix top-panel/global-menu behavior for borderless maximized windows: panel
+  buttons now target the maximized window on the current screen even when a
+  floating helper/dialog is focused above it.
+* Add `MaximizedWindowExists` visibility mode and expose it as "Maximized window
+  is shown" in Behavior settings.
+* Treat the old "Active window is maximized" visibility mode as a compatibility
+  alias for the maximized-window behavior.
+* Preserve upstream fallback behavior by targeting the active window when no
+  maximized window exists on the current screen.
+* Evaluate inactive button state against the represented maximized window
+  instead of the focused floating window.
+* Keep the represented task as explicit state so focus, minimize, maximize, and
+  stacking changes update visibility, button actions, and inactive colors
+  consistently.
+* Treat full-decoration damage from KDecoration as requiring a button repaint,
+  fixing stale Breeze active/inactive colors that only refreshed after hover.
+* Distinguish special out-of-task-model focus, such as Yakuake, from normal
+  floating windows: special focus makes buttons inactive and non-clickable,
+  while tracked floating focus keeps them usable but dimmed.
+* Recreate decoration buttons when the represented target window changes, so
+  Breeze refreshes the maximize/restore glyph even when the maximized state
+  remains true across the target switch.
+* Fix stale pointer state by forwarding corrected release/hover coordinates to
+  KDecoration.
+* Use Qt 6 input-event constructors for synthetic button events while preserving
+  KDecoration-local positions and the original pointer device.
+* Build with C++20 directly, matching current KDecoration3 requirements.
+* Update package metadata and requirements for Plasma 6/KDecoration3,
+  and remove noisy runtime debug logging from QML/C++ paths.
+* Fix bridge signal cleanup and decoration plugin metadata validation found
+  during the package audit.
+* Dim controls for active floating-only sessions when no maximized window is
+  represented, while keeping them clickable, and hard-inactivate them when focus
+  is outside the task model such as Yakuake.
+* Make "At least one window is shown" depend on any non-minimized tracked window,
+  not only the active or maximized target, while still using the best shown
+  window as the disabled fallback target when focus is outside the task model.
+* Add optional custom slide animation settings: keep the upstream 250 ms
+  accelerated slide as the default, or enable custom timing with duration and
+  acceleration strength controls in Behavior settings.
+
 #### Version 0.11.0
 
 * support Plasma 5.24 way of discovering themes from theme engines

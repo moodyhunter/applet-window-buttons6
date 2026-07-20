@@ -8,16 +8,16 @@
             }
         ],
         "Category": "Windows and Tasks",
-        "Description": "Window buttons for your panels",
+        "Description": "Window buttons for Plasma 6 panels with maximized-window titlebar semantics",
         "Icon": "focus-windows",
         "Id": "org.kde.windowbuttons",
         "License": "GPLv2",
         "Name": "Window Buttons",
-        "Version": "0.11.1",
-        "Website": "https://github.com/psifidotos/applet-window-buttons"
+        "Version": "0.12.0",
+        "Website": "https://github.com/moodyhunter/applet-window-buttons6"
     },
     "Keywords": "window buttons",
     "X-Plasma-API": "declarativeappletscript",
     "X-Plasma-MainScript": "ui/main.qml",
-    "X-Plasma-API-Minimum-Version": "6.0"
+    "X-Plasma-API-Minimum-Version": "6.4"
 }

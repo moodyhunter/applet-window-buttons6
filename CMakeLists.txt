@@ -6,7 +6,7 @@ project(applet_windowbuttons)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(VERSION 0.16.0)
+set(VERSION 0.12.0)
 set(AUTHOR "Michail Vourlakos")
 set(EMAIL "mvourlakos@gmail.com")
 
