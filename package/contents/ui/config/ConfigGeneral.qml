@@ -46,10 +46,6 @@ KCM.SimpleKCM {
     property string currentPlugin: root.useCurrent || !selectedDecorationExists ? decorations.currentPlugin : root.selectedPlugin
     property string currentTheme: root.useCurrent || !selectedDecorationExists ? decorations.currentTheme : root.selectedTheme
 
-    onSelectedPluginChanged: {
-        console.log("Selected Plugin CHanged: ", root.selectedPlugin)
-    }
-
     ///START Decoration Items
     AppletDecoration.Bridge {
         id: bridgeItem

@@ -20,11 +20,15 @@ KCM.SimpleKCM {
     property alias cfg_perScreenActive: perScreenActiveChk.checked
     property alias cfg_filterByScreen: filterByScreenChk.checked
     property alias cfg_inactiveStateEnabled: inactiveChk.checked
+    property alias cfg_customSlideAnimation: customSlideAnimationChk.checked
+    property alias cfg_slideAnimationDuration: slideAnimationDurationSpin.value
+    property alias cfg_slideAnimationAcceleration: slideAnimationAccelerationSpin.value
     property alias cfg_borderlessMaximizedWindows: root.borderlessMaximizedWindows
 
     // used as bridge to communicate properly between configuration and ui
     property int visibility
     property int hiddenState
+    readonly property bool customSlideControlsEnabled: customSlideAnimationChk.checked && slideOutBtn.checked && root.visibility !== AppletDecoration.Types.AlwaysVisible
     property bool borderlessMaximizedWindows: kwinConfig.borderlessMaximizedWindows
     property bool initialBorderlessMaximizedWindowsValue: kwinConfig.borderlessMaximizedWindows
 
@@ -78,13 +82,13 @@ KCM.SimpleKCM {
         }
 
         QQC2.RadioButton {
-            id: activeMaximizedBtn
+            id: maximizedWindowBtn
             QQC2.ButtonGroup.group: visibilityBtnGroup
-            text: i18n("Active window is maximized")
-            checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow
+            text: i18n("Maximized window is shown")
+            checked: root.visibility === AppletDecoration.Types.ActiveMaximizedWindow || root.visibility === AppletDecoration.Types.MaximizedWindowExists
             onCheckedChanged: {
                 if (checked)
-                    root.visibility = AppletDecoration.Types.ActiveMaximizedWindow;
+                    root.visibility = AppletDecoration.Types.MaximizedWindowExists;
 
             }
         }
@@ -129,6 +133,94 @@ KCM.SimpleKCM {
                 if (checked)
                     root.hiddenState = AppletDecoration.Types.EmptySpace;
 
+            }
+        }
+
+        QQC2.CheckBox {
+            id: customSlideAnimationChk
+            Kirigami.FormData.label: i18n("Slide animation:")
+            text: i18n("Use custom timing")
+            enabled: slideOutBtn.checked && root.visibility !== AppletDecoration.Types.AlwaysVisible
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Duration:")
+            enabled: root.customSlideControlsEnabled
+            opacity: enabled ? 1 : 0.45
+
+            QQC2.Slider {
+                id: slideAnimationDurationSlider
+
+                Layout.fillWidth: true
+                from: 50
+                to: 1000
+                stepSize: 10
+                snapMode: QQC2.Slider.SnapAlways
+                value: slideAnimationDurationSpin.value
+                onMoved: slideAnimationDurationSpin.value = Math.round(value / 10) * 10
+            }
+
+            QQC2.SpinBox {
+                id: slideAnimationDurationSpin
+
+                from: 50
+                to: 1000
+                stepSize: 10
+                textFromValue: function(value) {
+                    return i18n("%1 ms", value);
+                }
+                valueFromText: function(text) {
+                    return parseInt(text);
+                }
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18n("Acceleration:")
+            enabled: root.customSlideControlsEnabled
+            opacity: enabled ? 1 : 0.45
+
+            QQC2.Slider {
+                id: slideAnimationAccelerationSlider
+
+                Layout.fillWidth: true
+                from: 0
+                to: 4
+                stepSize: 1
+                snapMode: QQC2.Slider.SnapAlways
+                value: slideAnimationAccelerationSpin.value
+                onMoved: slideAnimationAccelerationSpin.value = Math.round(value)
+            }
+
+            QQC2.SpinBox {
+                id: slideAnimationAccelerationSpin
+
+                from: 0
+                to: 4
+                textFromValue: function(value) {
+                    if (value === 0)
+                        return i18n("None");
+                    if (value === 1)
+                        return i18n("Soft");
+                    if (value === 2)
+                        return i18n("Default");
+                    if (value === 3)
+                        return i18n("Fast");
+
+                    return i18n("Aggressive");
+                }
+                valueFromText: function(text) {
+                    if (text === i18n("None"))
+                        return 0;
+                    if (text === i18n("Soft"))
+                        return 1;
+                    if (text === i18n("Default"))
+                        return 2;
+                    if (text === i18n("Fast"))
+                        return 3;
+
+                    return 4;
+                }
             }
         }
 

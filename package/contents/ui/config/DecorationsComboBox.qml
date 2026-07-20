@@ -22,7 +22,6 @@ ComboBox {
         if (index === -1)
             return ;
 
-        console.log(currentTheme, combobox.currentText, combobox.currentValue);
         root.useCurrent = false;
         root.selectedPlugin = combobox.currentValue;
         root.selectedTheme = combobox.currentText;
