@@ -46,6 +46,10 @@ SPDX-License-Identifier: GPL-2.0-or-later
       <default>false</default>
       <label>Per-screen active window</label>
     </entry>
+    <entry name="minimizeTopmostMaximizedWindow" type="Bool">
+      <default>false</default>
+      <label>Minimize the topmost maximized window</label>
+    </entry>
     <entry name="hiddenState" type="Enum">
       <choices>
         <choice name="SlideOut" />

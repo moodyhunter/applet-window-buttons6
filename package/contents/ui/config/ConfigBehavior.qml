@@ -19,6 +19,7 @@ KCM.SimpleKCM {
     property alias cfg_hiddenState: root.hiddenState
     property alias cfg_perScreenActive: perScreenActiveChk.checked
     property alias cfg_filterByScreen: filterByScreenChk.checked
+    property alias cfg_minimizeTopmostMaximizedWindow: minimizeTopmostMaximizedWindowChk.checked
     property alias cfg_inactiveStateEnabled: inactiveChk.checked
     property alias cfg_borderlessMaximizedWindows: root.borderlessMaximizedWindows
 
@@ -145,6 +146,11 @@ KCM.SimpleKCM {
         QQC2.CheckBox {
             id: perScreenActiveChk
             text: i18n("Per-screen active window:")
+        }
+
+        QQC2.CheckBox {
+            id: minimizeTopmostMaximizedWindowChk
+            text: i18n("Minimize the topmost maximized window")
         }
 
         Item {

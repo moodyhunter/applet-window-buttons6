@@ -16,6 +16,7 @@ Item {
     id: plasmaTasksItem
 
     property bool filterByScreen: true
+    readonly property var taskRoles: TaskManager.AbstractTasksModel
     readonly property bool existsWindowActive: lastActiveTaskItem && tasksRepeater.count > 0 && (root.perScreenActive || lastActiveTaskItem.isActive)
     readonly property bool existsWindowShown: lastActiveTaskItem && tasksRepeater.count > 0 && !lastActiveTaskItem.isMinimized
     property Item lastActiveTaskItem: null
@@ -27,8 +28,36 @@ Item {
     }
 
     function toggleMinimized() {
-        if (lastActiveTaskItem)
-            lastActiveTaskItem.toggleMinimized();
+        if (!plasmoid.configuration.minimizeTopmostMaximizedWindow) {
+            if (lastActiveTaskItem)
+                lastActiveTaskItem.toggleMinimized();
+
+            return;
+        }
+
+        var target = null;
+        var highestStackingOrder = -1;
+
+        for (var i = 0; i < tasksModel.count; ++i) {
+            var taskIndex = tasksModel.index(i, 0);
+
+            if (!tasksModel.data(taskIndex, taskRoles.IsWindow)
+                    || !tasksModel.data(taskIndex, taskRoles.IsMaximized)
+                    || !tasksModel.data(taskIndex, taskRoles.IsMinimizable)
+                    || tasksModel.data(taskIndex, taskRoles.IsMinimized)
+                    || tasksModel.data(taskIndex, taskRoles.IsHidden)) {
+                continue;
+            }
+
+            var stackingOrder = tasksModel.data(taskIndex, taskRoles.StackingOrder);
+            if (stackingOrder > highestStackingOrder) {
+                highestStackingOrder = stackingOrder;
+                target = taskIndex;
+            }
+        }
+
+        if (target)
+            tasksModel.requestToggleMinimized(target);
 
     }
 
