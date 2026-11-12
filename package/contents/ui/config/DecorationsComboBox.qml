@@ -7,28 +7,37 @@
 */
 
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
+import QtQuick.Controls as QQC2
 
-ComboBox {
+QQC2.ComboBox {
     id: combobox
 
-    model: sortedDecorations
-    textRole: "display"
-    valueRole: "plugin"
-    onActivated: {
-        var index = combobox.currentIndex;
-        if (index === -1)
-            return ;
-
-        console.log(currentTheme, combobox.currentText, combobox.currentValue);
-        root.useCurrent = false;
-        root.selectedPlugin = combobox.currentValue;
-        root.selectedTheme = combobox.currentText;
+    model: ListModel {
+        id: decs
     }
+    textRole: "display"
+
+    function activateItem(itemIndex) {
+        if (itemIndex === 0) {
+            root.useCurrent = true;
+            root.selectedPlugin = "";
+            root.selectedTheme = "";
+        } else {
+            var d = decorations.get(itemIndex - 1);
+            root.useCurrent = false;
+            root.selectedPlugin = d.plugin;
+            root.selectedTheme = d.theme;
+        }
+    }
+
+    onActivated: index => activateItem(index)
+
     Component.onCompleted: {
-        combobox.currentIndex = combobox.find(root.currentTheme);
+        decs.append({ "display": i18n("Current") });
+        for (var i = 0; i < decorations.count; ++i) {
+            decs.append({ "display": decorations.get(i).display });
+        }
+        currentIndex = root.useCurrent ? 0 : decorations.indexOf(root.selectedPlugin, root.selectedTheme) + 1;
     }
 
     Connections {
@@ -36,49 +45,6 @@ ComboBox {
             root.forceActiveFocus();
         }
 
-        target: popup
+        target: combobox.popup
     }
-
-    delegate: MouseArea {
-        height: combobox.height
-        width: combobox.width
-        hoverEnabled: true
-        onClicked: {
-            combobox.currentIndex = index;
-            root.useCurrent = false;
-            root.selectedPlugin = plugin;
-            root.selectedTheme = theme;
-            combobox.popup.close();
-        }
-
-        Rectangle {
-            id: delegateBackground
-
-            readonly property color selectedColor: Qt.rgba(palette.highlight.r, palette.highlight.g, palette.highlight.b, 0.5)
-
-            anchors.fill: parent
-            color: {
-                if (containsMouse)
-                    return palette.highlight;
-
-                if (combobox.currentIndex === index)
-                    return selectedColor;
-
-                return "transparent";
-            }
-
-            Label {
-                id: label
-
-                anchors.left: parent.left
-                anchors.leftMargin: Kirigami.Units.smallSpacing
-                anchors.verticalCenter: parent.verticalCenter
-                text: display
-                color: containsMouse ? palette.highlightedText : palette.text
-            }
-
-        }
-
-    }
-
 }

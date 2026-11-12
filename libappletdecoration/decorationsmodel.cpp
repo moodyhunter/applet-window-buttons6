@@ -21,6 +21,7 @@
 #include <Plasma/PluginLoader>
 #include <QDebug>
 #include <QDir>
+#include <algorithm>
 #include <qloggingcategory.h>
 
 Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
@@ -28,9 +29,11 @@ Q_LOGGING_CATEGORY(decorations_model, "DecorationsModel");
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_defaultTheme;
 static const QString s_auroraePlugin = QStringLiteral("org.kde.kwin.aurorae");
+static const QString s_auroraeV2Plugin = QStringLiteral("org.kde.kwin.aurorae.v2");
 static const QString s_auroraeSvgTheme = QStringLiteral("__aurorae__svg__");
 
 static const QString s_kwinrc = QStringLiteral("kwinrc");
+static const QString s_kwinrcGroup = QStringLiteral("org.kde.kdecoration2");
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
 
 DecorationsModel::DecorationsModel(QObject *parent) : QAbstractListModel(parent)
@@ -178,7 +181,7 @@ void DecorationsModel::init()
                 data.themeName = t.themeName();
                 data.visibleName = t.visibleName();
 
-                if (data.pluginName == s_auroraePlugin && data.themeName.startsWith(s_auroraeSvgTheme))
+                if ((data.pluginName == s_auroraePlugin || data.pluginName == s_auroraeV2Plugin) && data.themeName.startsWith(s_auroraeSvgTheme))
                     data.isAuroraeTheme = true;
 
                 qCInfo(decorations_model) << "Adding theme" << data.visibleName << "from" << data.pluginName;
@@ -200,12 +203,34 @@ void DecorationsModel::init()
             m_plugins.emplace_back(std::move(data));
         }
     }
+
+    std::sort(m_plugins.begin(), m_plugins.end(), [](const Data &a, const Data &b) { return QString::localeAwareCompare(a.visibleName, b.visibleName) < 0; });
     endResetModel();
+}
+
+QVariantMap DecorationsModel::get(int row) const
+{
+    if (row < 0 || row >= int(m_plugins.size()))
+    {
+        return QVariantMap();
+    }
+
+    const Data &d = m_plugins.at(row);
+    return QVariantMap({ { QStringLiteral("display"), d.visibleName },
+                         { QStringLiteral("plugin"), d.pluginName },
+                         { QStringLiteral("theme"), d.themeName },
+                         { QStringLiteral("isAuroraeTheme"), d.isAuroraeTheme } });
+}
+
+int DecorationsModel::indexOf(const QString &plugin, const QString &theme) const
+{
+    const QModelIndex index = findDecoration(plugin, theme);
+    return index.isValid() ? index.row() : -1;
 }
 
 void DecorationsModel::loadCurrents()
 {
-    const KConfigGroup config = KSharedConfig::openConfig(s_kwinrc)->group(s_pluginName);
+    const KConfigGroup config = KSharedConfig::openConfig(s_kwinrc)->group(s_kwinrcGroup);
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", s_defaultTheme);
 

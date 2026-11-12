@@ -12,7 +12,6 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
-import org.kde.kitemmodels
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.core as PlasmaCore
 import org.kde.appletdecoration as AppletDecoration
@@ -96,15 +95,6 @@ KCM.SimpleKCM {
 
     SystemPalette {
         id: palette
-    }
-
-    // sort decorations based on display name
-    KSortFilterProxyModel {
-        id: sortedDecorations
-
-        sourceModel: decorations
-        sortRoleName: 'display'
-        sortOrder: Qt.AscendingOrder
     }
 
     ColumnLayout {
