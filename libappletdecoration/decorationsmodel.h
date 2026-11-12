@@ -11,6 +11,7 @@
 #define DECORATIONSMODEL_H
 
 #include <QAbstractListModel>
+#include <QVariantMap>
 
 class DecorationsModel : public QAbstractListModel
 {
@@ -42,6 +43,8 @@ class DecorationsModel : public QAbstractListModel
   public Q_SLOTS:
     Q_INVOKABLE bool decorationExists(const QString &plugin, const QString &theme);
     Q_INVOKABLE bool isAurorae(const QString &plugin, const QString &theme);
+    Q_INVOKABLE QVariantMap get(int row) const;
+    Q_INVOKABLE int indexOf(const QString &plugin, const QString &theme) const;
 
   signals:
     void countChanged();

@@ -122,6 +122,11 @@ Item {
                         plasmaTasksItem.lastActiveTaskItem = task;
 
                 }
+                Component.onCompleted: {
+                    if (isActive)
+                        plasmaTasksItem.lastActiveTaskItem = task;
+
+                }
                 Component.onDestruction: {
                     if (plasmaTasksItem.lastActiveTaskItem === task)
                         plasmaTasksItem.lastActiveTaskItem = null;
